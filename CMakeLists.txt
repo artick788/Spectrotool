@@ -2,11 +2,15 @@ cmake_minimum_required(VERSION 3.16)
 project(Spectrotool)
 
 include(SyriusBuildUtils/CMakeUtils.cmake)
+include(cmake/CMakeLibs.cmake)
+
+fetch_openxlsx()
 
 set(SPECTROTOOL_SRC
 )
 
 add_executable(Spectrotool main.cpp ${SPECTROTOOL_SRC})
+target_link_libraries(Spectrotool OpenXLSX)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     # Add GTest
@@ -15,7 +19,8 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
 
     message(STATUS "Building tests")
 
-    add_executable(SpectrotoolTest ${SPECTROTOOL_SRC})
+    add_executable(SpectrotoolTest ${SPECTROTOOL_SRC}
+            test/test.cpp)
     add_dependencies(SpectrotoolTest gtest)
 
     target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main)

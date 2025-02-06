@@ -1,18 +1,12 @@
 #include <iostream>
-#include <OpenXLSX.hpp>
-#include <filesystem>
+#include "src/Worksheet.hpp"
 
-namespace fs = std::filesystem;
+using namespace Spectrotool;
 
 void test_openxlsx(const fs::path& path) {
-    OpenXLSX::XLDocument doc;
-    doc.open(path.string());
-
-    auto polarSheet = doc.workbook().worksheet("Polar");
-    auto range = polarSheet.range();
-    for (const auto& cell : range) {
-        std::cout << cell.value() << std::endl;
-    }
+    WorksheetDesc desc;
+    Worksheet worksheet(path, desc);
+    int x = 0;
 }
 
 int main(int argc, char *argv[]) {

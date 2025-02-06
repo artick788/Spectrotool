@@ -7,6 +7,12 @@ include(cmake/CMakeLibs.cmake)
 fetch_openxlsx()
 
 set(SPECTROTOOL_SRC
+    src/json.hpp
+    src/Compound.cpp
+    src/Compound.hpp
+    src/Defs.hpp
+    src/Worksheet.cpp
+    src/Worksheet.hpp
 )
 
 add_executable(Spectrotool main.cpp ${SPECTROTOOL_SRC})

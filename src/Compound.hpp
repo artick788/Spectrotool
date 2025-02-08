@@ -22,6 +22,10 @@ namespace Spectrotool {
 
         [[nodiscard]] const std::string& getName() const { return m_Name;}
 
+        void addValue(CompoundValue&& value) { m_Values.push_back(std::move(value)); }
+
+        [[nodiscard]] const std::vector<CompoundValue>& getValues() const { return m_Values; }
+
     private:
         std::string m_Name;
         std::vector<CompoundValue> m_Values;

@@ -23,6 +23,8 @@ namespace Spectrotool{
 
         static std::string formatCompoundName(const std::string& name);
 
+        static void addCompound(Compound& compound, const OpenXLSX::XLCell& row);
+
     private:
         std::vector<Compound> m_PolarCompounds;
         std::vector<Compound> m_NeutralCompounds;

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "SpectrotoolAppInclude.hpp"
-
-#include <Spectrotool/Worksheet.hpp>
+#include "Store.hpp"
+#include "Panels/MenuPanel.hpp"
 
 namespace Spectrotool {
 
@@ -23,6 +23,9 @@ namespace Spectrotool {
     private:
         UP<SyriusWindow> m_Window;
         ResourceView<Context> m_Context;
+        UP<Store> m_Store;
+
+        UP<MenuPanel> m_MenuPanel;
     };
 
 }

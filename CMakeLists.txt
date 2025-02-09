@@ -26,7 +26,13 @@ target_link_libraries(Spectrotool OpenXLSX)
 set(SPECTROTOOL_APP_SRC
         SpectrotoolApp/SpectrotoolApp.cpp
         SpectrotoolApp/SpectrotoolApp.hpp
-        SpectrotoolApp/SpectrotoolAppInclude.hpp)
+        SpectrotoolApp/SpectrotoolAppInclude.hpp
+        SpectrotoolApp/Panels/Panel.cpp
+        SpectrotoolApp/Panels/Panel.hpp
+        SpectrotoolApp/Store.cpp
+        SpectrotoolApp/Store.hpp
+        SpectrotoolApp/Panels/MenuPanel.cpp
+        SpectrotoolApp/Panels/MenuPanel.hpp)
 
 add_executable(SpectrotoolApp main.cpp ${SPECTROTOOL_APP_SRC})
 target_link_libraries(SpectrotoolApp Spectrotool SyriusCore)

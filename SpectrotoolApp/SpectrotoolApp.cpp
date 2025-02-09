@@ -15,6 +15,9 @@ namespace Spectrotool {
         m_Context->setVerticalSynchronisation(true);
         m_Context->setClearColor(1.0f, 0.0, 0.0, 1.0f);
         m_Window->createImGuiContext();
+
+        m_Store = createUP<Store>();
+        m_MenuPanel = createUP<MenuPanel>(m_Window, m_Context, m_Store);
     }
 
     void SpectrotoolApp::run() {
@@ -26,7 +29,9 @@ namespace Spectrotool {
             }
 
             m_Context->clear();
+            m_Context->beginRenderPass();
             renderImGui();
+            m_Context->endRenderPass();
             m_Context->swapBuffers();
         }
     }
@@ -43,6 +48,9 @@ namespace Spectrotool {
 
     void SpectrotoolApp::renderImGui() {
         m_Window->onImGuiBegin();
+
+        WindowSize size;
+        m_MenuPanel->render(size);
 
         m_Window->onImGuiEnd();
     }

@@ -5,18 +5,31 @@ include(SyriusBuildUtils/CMakeUtils.cmake)
 include(cmake/CMakeLibs.cmake)
 
 fetch_openxlsx()
+fetch_syriuscore()
+
+set(SPECTROTOOL_HEADERS
+    include/Spectrotool/Compound.hpp
+    include/Spectrotool/Defs.hpp
+    include/Spectrotool/Worksheet.hpp
+)
 
 set(SPECTROTOOL_SRC
     src/json.hpp
     src/Compound.cpp
-    src/Compound.hpp
-    src/Defs.hpp
     src/Worksheet.cpp
-    src/Worksheet.hpp
 )
 
-add_executable(Spectrotool main.cpp ${SPECTROTOOL_SRC})
+add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})
+target_include_directories(Spectrotool PUBLIC include)
 target_link_libraries(Spectrotool OpenXLSX)
+
+set(SPECTROTOOL_APP_SRC
+        SpectrotoolApp/SpectrotoolApp.cpp
+        SpectrotoolApp/SpectrotoolApp.hpp
+        SpectrotoolApp/SpectrotoolAppInclude.hpp)
+
+add_executable(SpectrotoolApp main.cpp ${SPECTROTOOL_APP_SRC})
+target_link_libraries(SpectrotoolApp Spectrotool SyriusCore)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     # Add GTest

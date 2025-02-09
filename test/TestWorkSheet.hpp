@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../src/Worksheet.hpp"
+#include "../include/Spectrotool/Worksheet.hpp"
 
 using namespace Spectrotool;
 

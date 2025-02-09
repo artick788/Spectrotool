@@ -1,4 +1,4 @@
-#include "Worksheet.hpp"
+#include "../include/Spectrotool/Worksheet.hpp"
 
 #include <filesystem>
 
@@ -11,6 +11,8 @@ namespace Spectrotool{
 
         OpenXLSX::XLDocument doc;
         doc.open(path.string());
+        // TODO: Do we really need the distinction between polar, neutral and apolar compounds?
+        //      Can we add them to the same vector? Or maybe store the type directly in the Compound object?
         loadWorkSheet(doc.workbook().worksheet(desc.polarSheetName), m_PolarCompounds);
         loadWorkSheet(doc.workbook().worksheet(desc.neutralSheetName), m_NeutralCompounds);
         loadWorkSheet(doc.workbook().worksheet(desc.apolarSheetName), m_ApolarCompounds);

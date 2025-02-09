@@ -1,4 +1,4 @@
-#include "Compound.hpp"
+#include "../include/Spectrotool/Compound.hpp"
 
 #include <utility>
 

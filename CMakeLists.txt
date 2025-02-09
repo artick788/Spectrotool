@@ -32,7 +32,9 @@ set(SPECTROTOOL_APP_SRC
         SpectrotoolApp/Store.cpp
         SpectrotoolApp/Store.hpp
         SpectrotoolApp/Panels/MenuPanel.cpp
-        SpectrotoolApp/Panels/MenuPanel.hpp)
+        SpectrotoolApp/Panels/MenuPanel.hpp
+        SpectrotoolApp/Panels/FilePanel.cpp
+        SpectrotoolApp/Panels/FilePanel.hpp)
 
 add_executable(SpectrotoolApp main.cpp ${SPECTROTOOL_APP_SRC})
 target_link_libraries(SpectrotoolApp Spectrotool SyriusCore)

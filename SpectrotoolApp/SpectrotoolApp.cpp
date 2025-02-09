@@ -18,6 +18,7 @@ namespace Spectrotool {
 
         m_Store = createUP<Store>();
         m_MenuPanel = createUP<MenuPanel>(m_Window, m_Context, m_Store);
+        m_FilePanel = createUP<FilePanel>(m_Window, m_Context, m_Store);
     }
 
     void SpectrotoolApp::run() {
@@ -51,6 +52,8 @@ namespace Spectrotool {
 
         WindowSize size;
         m_MenuPanel->render(size);
+        size.y += s_MENUBAR_HEIGHT;
+        m_FilePanel->render(size);
 
         m_Window->onImGuiEnd();
     }

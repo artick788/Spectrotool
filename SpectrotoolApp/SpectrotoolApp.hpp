@@ -2,6 +2,7 @@
 
 #include "SpectrotoolAppInclude.hpp"
 #include "Store.hpp"
+#include "Panels/FilePanel.hpp"
 #include "Panels/MenuPanel.hpp"
 
 namespace Spectrotool {
@@ -26,6 +27,7 @@ namespace Spectrotool {
         UP<Store> m_Store;
 
         UP<MenuPanel> m_MenuPanel;
+        UP<FilePanel> m_FilePanel;
     };
 
 }

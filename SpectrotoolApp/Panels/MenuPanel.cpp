@@ -8,7 +8,7 @@ namespace Spectrotool {
 
     void MenuPanel::render(WindowSize &size) {
         ImGui::SetNextWindowPos({0.0f, 0.0f});
-        ImGui::SetNextWindowSize({static_cast<float>(m_Window->getWidth()), 18.0f});
+        ImGui::SetNextWindowSize({static_cast<float>(m_Window->getWidth()), s_MENUBAR_HEIGHT});
 
         ImGui::Begin("MenuPanel", nullptr, ImGuiWindowFlags_NoTitleBar |
                                                           ImGuiWindowFlags_MenuBar |
@@ -16,6 +16,14 @@ namespace Spectrotool {
                                                           ImGuiWindowFlags_NoBackground);
 
         if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("About")) {
+
+                ImGui::EndMenu();
+            }
             ImGui::EndMenuBar();
         }
 

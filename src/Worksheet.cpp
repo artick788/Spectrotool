@@ -13,6 +13,8 @@ namespace Spectrotool{
         doc.open(path.string());
         // TODO: Do we really need the distinction between polar, neutral and apolar compounds?
         //      Can we add them to the same vector? Or maybe store the type directly in the Compound object?
+        //
+        //      ==> No, just store them in a single vector
         loadWorkSheet(doc.workbook().worksheet(desc.polarSheetName), m_PolarCompounds);
         loadWorkSheet(doc.workbook().worksheet(desc.neutralSheetName), m_NeutralCompounds);
         loadWorkSheet(doc.workbook().worksheet(desc.apolarSheetName), m_ApolarCompounds);

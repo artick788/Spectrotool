@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 namespace Spectrotool {
 
@@ -24,7 +25,7 @@ namespace Spectrotool {
 
         [[nodiscard]] const std::string& getName() const { return m_Name;}
 
-        void addValue(CompoundValue&& value) { m_Values.push_back(std::move(value)); }
+        void addValue(CompoundValue&& value);
 
         [[nodiscard]] const std::vector<CompoundValue>& getValues() const { return m_Values; }
 
@@ -33,5 +34,6 @@ namespace Spectrotool {
     private:
         std::string m_Name;
         std::vector<CompoundValue> m_Values;
+        std::unordered_set<std::string> m_CompoundValueID;
     };
 }

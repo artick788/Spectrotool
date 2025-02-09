@@ -1,45 +1,45 @@
-#include "../include/Spectrotool/Worksheet.hpp"
+#include "../include/Spectrotool/MassSpecFile.hpp"
 
 #include <filesystem>
 
 namespace Spectrotool{
 
-    Worksheet::Worksheet(const fs::path& path, const WorksheetDesc& desc){
+    MassSpecFile::MassSpecFile(const fs::path& path, const WorksheetDesc& desc){
         if (!fs::exists(path)){
             throw std::runtime_error("File does not exist: " + path.string());
         }
 
         OpenXLSX::XLDocument doc;
         doc.open(path.string());
-        // TODO: Do we really need the distinction between polar, neutral and apolar compounds?
-        //      Can we add them to the same vector? Or maybe store the type directly in the Compound object?
-        //
-        //      ==> No, just store them in a single vector
-        loadWorkSheet(doc.workbook().worksheet(desc.polarSheetName), m_PolarCompounds);
-        loadWorkSheet(doc.workbook().worksheet(desc.neutralSheetName), m_NeutralCompounds);
-        loadWorkSheet(doc.workbook().worksheet(desc.apolarSheetName), m_ApolarCompounds);
-    }
-
-    bool Worksheet::hasCompound(const std::string &name, const ST_COMPOUND_TYPE type) const {
-        switch (type) {
-            case ST_COMPOUND_TYPE_POLAR:    return searchInCompound(name, m_PolarCompounds);
-            case ST_COMPOUND_TYPE_NEUTRAL:  return searchInCompound(name, m_NeutralCompounds);
-            case ST_COMPOUND_TYPE_APOLAR:   return searchInCompound(name, m_ApolarCompounds);
-            default:                        return false;
+        for (const auto& sheetName: desc.sheetNames) {
+            if (!doc.workbook().worksheetExists(sheetName)) {
+                throw std::runtime_error("Sheet: " + sheetName + " + does not exist in file: " + path.string());
+            }
+            loadWorkSheet(doc.workbook().worksheet(sheetName));
         }
     }
 
-    std::vector<Compound*> Worksheet::getCompound(const std::string &name, const ST_COMPOUND_TYPE type) {
-        switch (type) {
-            case ST_COMPOUND_TYPE_POLAR:    return getCompound(name, m_PolarCompounds);
-            case ST_COMPOUND_TYPE_NEUTRAL:  return getCompound(name, m_NeutralCompounds);
-            case ST_COMPOUND_TYPE_APOLAR:   return getCompound(name, m_ApolarCompounds);
-            default:                        return {};
+    bool MassSpecFile::hasCompound(const std::string &name) const {
+        for (const auto& compound: m_Compounds) {
+            if (compound.getName() == name) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    std::vector<Compound*> MassSpecFile::getCompound(const std::string &name) {
+        std::vector<Compound*> result;
+        for (auto& compound: m_Compounds) {
+            if (compound.getName() == name) {
+                result.push_back(&compound);
+            }
+        }
+        return result;
     }
 
 
-    void Worksheet::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, std::vector<Compound>& compounds){
+    void MassSpecFile::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet){
         Compound* currentCompound = nullptr;
         uint32_t nextCompound = 1;
         static std::string compoundName = "Compound ";
@@ -54,8 +54,11 @@ namespace Spectrotool{
                 std::string nextCompoundField = compoundName + std::to_string(nextCompound);
                 // Create a new compound and format the name
                 if (value.find(nextCompoundField) != std::string::npos) {
-                    compounds.emplace_back(formatCompoundName(value));
-                    currentCompound = &compounds.back();
+                    if (m_CompoundNames.find(value) != m_CompoundNames.end()) {
+                        throw std::runtime_error("Duplicate compound name: " + value);
+                    }
+                    m_Compounds.emplace_back(formatCompoundName(value));
+                    currentCompound = &m_Compounds.back();
                     nextCompound++;
                 }
             }
@@ -70,7 +73,7 @@ namespace Spectrotool{
         }
     }
 
-    std::string Worksheet::formatCompoundName(const std::string &name) {
+    std::string MassSpecFile::formatCompoundName(const std::string &name) {
         // Compound names are formatted as "Compound X: <name>", remove the "Compound X: " part
         const size_t pos = name.find(':');
         if (pos == std::string::npos) {
@@ -87,7 +90,7 @@ namespace Spectrotool{
         return extracted;
     }
 
-    void Worksheet::addCompound(Compound &compound, const OpenXLSX::XLCell &row) {
+    void MassSpecFile::addCompound(Compound &compound, const OpenXLSX::XLCell &row) {
         CompoundValue value;
         value.name = row.offset(0, 2).value().getString();
         value.id = row.offset(0, 3).value().getString();
@@ -105,25 +108,5 @@ namespace Spectrotool{
         }
         compound.addValue(std::move(value));
     }
-
-    bool Worksheet::searchInCompound(const std::string &name, const std::vector<Compound> &compounds) {
-        for (const auto& compound: compounds) {
-            if (compound.getName() == name) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    std::vector<Compound*> Worksheet::getCompound(const std::string &name, std::vector<Compound> &compounds) {
-        std::vector<Compound*> result;
-        for (auto& compound: compounds) {
-            if (compound.getName() == name) {
-                result.push_back(&compound);
-            }
-        }
-        return result;
-    }
-
 
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SyriusCore/SyriusCore.hpp>
-#include <Spectrotool/Worksheet.hpp>
+#include <Spectrotool/MassSpecFile.hpp>
 
 namespace Spectrotool {
 

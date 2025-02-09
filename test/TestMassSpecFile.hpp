@@ -2,11 +2,11 @@
 
 #include <gtest/gtest.h>
 
-#include "../include/Spectrotool/Worksheet.hpp"
+#include "../include/Spectrotool/MassSpecFile.hpp"
 
 using namespace Spectrotool;
 
-class TestWorkSheet : public ::testing::Test {
+class TestMassSpecFile : public ::testing::Test {
 protected:
     void SetUp() override ;
 

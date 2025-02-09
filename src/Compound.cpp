@@ -1,5 +1,6 @@
 #include "../include/Spectrotool/Compound.hpp"
 
+#include <stdexcept>
 #include <utility>
 
 namespace Spectrotool {
@@ -13,6 +14,16 @@ namespace Spectrotool {
     m_Name(std::move(name)){
 
     }
+
+    void Compound::addValue(CompoundValue &&value) {
+        if (value.id != "ACN") {
+            if (m_CompoundValueID.find(value.id) != m_CompoundValueID.end()) {
+                throw std::runtime_error("Duplicate compound value ID: " + value.id + " for compound: " + m_Name);
+            }
+        }
+        m_Values.push_back(value);
+    }
+
 
     std::string Compound::str() const {
         std::string result = m_Name + ":\n";

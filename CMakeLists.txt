@@ -10,13 +10,13 @@ fetch_syriuscore()
 set(SPECTROTOOL_HEADERS
     include/Spectrotool/Compound.hpp
     include/Spectrotool/Defs.hpp
-    include/Spectrotool/Worksheet.hpp
+        include/Spectrotool/MassSpecFile.hpp
 )
 
 set(SPECTROTOOL_SRC
     src/json.hpp
     src/Compound.cpp
-    src/Worksheet.cpp
+        src/MassSpecFile.cpp
 )
 
 add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})
@@ -47,8 +47,8 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")
 
     add_executable(SpectrotoolTest ${SPECTROTOOL_SRC}
-        test/TestWorkSheet.cpp
-        test/TestWorkSheet.hpp)
+            test/TestMassSpecFile.cpp
+            test/TestMassSpecFile.hpp)
     add_dependencies(SpectrotoolTest gtest)
 
     target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX)

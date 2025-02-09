@@ -14,8 +14,26 @@ namespace Spectrotool{
         loadWorkSheet(doc.workbook().worksheet(desc.polarSheetName), m_PolarCompounds);
         loadWorkSheet(doc.workbook().worksheet(desc.neutralSheetName), m_NeutralCompounds);
         loadWorkSheet(doc.workbook().worksheet(desc.apolarSheetName), m_ApolarCompounds);
-
     }
+
+    bool Worksheet::hasCompound(const std::string &name, const ST_COMPOUND_TYPE type) const {
+        switch (type) {
+            case ST_COMPOUND_TYPE_POLAR:    return searchInCompound(name, m_PolarCompounds);
+            case ST_COMPOUND_TYPE_NEUTRAL:  return searchInCompound(name, m_NeutralCompounds);
+            case ST_COMPOUND_TYPE_APOLAR:   return searchInCompound(name, m_ApolarCompounds);
+            default:                        return false;
+        }
+    }
+
+    std::vector<Compound*> Worksheet::getCompound(const std::string &name, const ST_COMPOUND_TYPE type) {
+        switch (type) {
+            case ST_COMPOUND_TYPE_POLAR:    return getCompound(name, m_PolarCompounds);
+            case ST_COMPOUND_TYPE_NEUTRAL:  return getCompound(name, m_NeutralCompounds);
+            case ST_COMPOUND_TYPE_APOLAR:   return getCompound(name, m_ApolarCompounds);
+            default:                        return {};
+        }
+    }
+
 
     void Worksheet::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, std::vector<Compound>& compounds){
         Compound* currentCompound = nullptr;
@@ -49,11 +67,19 @@ namespace Spectrotool{
     }
 
     std::string Worksheet::formatCompoundName(const std::string &name) {
-        size_t pos = name.find(':');
+        // Compound names are formatted as "Compound X: <name>", remove the "Compound X: " part
+        const size_t pos = name.find(':');
         if (pos == std::string::npos) {
             throw std::runtime_error("Invalid compound name: " + name);
         }
         std::string extracted = name.substr(pos + 1);
+        if (extracted.empty()) {
+            throw std::runtime_error("Invalid compound name: " + name);
+        }
+        // Remove leading spaces
+        if (std::size_t start_str = extracted.find_first_not_of(' '); start_str != std::string::npos) {
+            extracted.erase(0, start_str);
+        }
         return extracted;
     }
 
@@ -74,6 +100,25 @@ namespace Spectrotool{
             value.sDivN = std::stod(sDivN);
         }
         compound.addValue(std::move(value));
+    }
+
+    bool Worksheet::searchInCompound(const std::string &name, const std::vector<Compound> &compounds) {
+        for (const auto& compound: compounds) {
+            if (compound.getName() == name) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    std::vector<Compound*> Worksheet::getCompound(const std::string &name, std::vector<Compound> &compounds) {
+        std::vector<Compound*> result;
+        for (auto& compound: compounds) {
+            if (compound.getName() == name) {
+                result.push_back(&compound);
+            }
+        }
+        return result;
     }
 
 

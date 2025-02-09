@@ -12,6 +12,8 @@ namespace Spectrotool {
         double area = 0.0;
         double isArea = 0.0;
         double sDivN = 0.0;
+
+        std::string str() const;
     };
 
     class Compound {
@@ -25,6 +27,8 @@ namespace Spectrotool {
         void addValue(CompoundValue&& value) { m_Values.push_back(std::move(value)); }
 
         [[nodiscard]] const std::vector<CompoundValue>& getValues() const { return m_Values; }
+
+        std::string str() const;
 
     private:
         std::string m_Name;

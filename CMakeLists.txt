@@ -26,10 +26,11 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")
 
     add_executable(SpectrotoolTest ${SPECTROTOOL_SRC}
-            test/test.cpp)
+        test/TestWorkSheet.cpp
+        test/TestWorkSheet.hpp)
     add_dependencies(SpectrotoolTest gtest)
 
-    target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main)
+    target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX)
 
     add_test(NAME CTestSpectrotool COMMAND ${PROOT} $<TARGET_FILE:SpectrotoolTest>)
     set_tests_properties(CTestSpectrotool PROPERTIES

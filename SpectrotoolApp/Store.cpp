@@ -27,6 +27,11 @@ namespace Spectrotool {
         m_Project = createUP<Project>(m_Worker, desc);
     }
 
+    void Store::loadProjectStproj(const fs::path &stprojPath) {
+        m_Project = createUP<Project>(m_Worker, stprojPath);
+    }
+
+
     bool Store::isProjectLoading() const {
         if (m_Project == nullptr){
             return false;

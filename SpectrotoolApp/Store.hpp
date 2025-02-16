@@ -18,6 +18,8 @@ namespace Spectrotool {
 
         void loadProject(const ProjectDesc& desc);
 
+        void loadProjectStproj(const fs::path& stprojPath);
+
         bool isProjectLoading() const;
 
         const UP<Project>& getProject() const { return m_Project; }

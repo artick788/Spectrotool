@@ -12,6 +12,8 @@ namespace Spectrotool{
 
     class Project{
     public:
+        Project(Worker& worker, const fs::path& stprojPath);
+
         explicit Project(Worker& worker, const ProjectDesc& desc);
 
         ~Project() = default;

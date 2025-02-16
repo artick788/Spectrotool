@@ -1,6 +1,21 @@
 #include "Project.hpp"
 
+#include <fstream>
+
 namespace Spectrotool{
+
+    Project::Project(Worker &worker, const fs::path &stprojPath):
+    m_Worker(worker) {
+        m_ProjectLoading = true;
+        m_Worker.addTask([this, stprojPath]() {
+            std::ifstream file(stprojPath);
+            nlohmann::json json;
+            file >> json;
+            m_MassSpecFile = createUP<MassSpecFile>();
+            m_MassSpecFile->fromJson(json);
+            m_ProjectLoading = false;
+        });
+    }
 
     Project::Project(Worker &worker, const ProjectDesc &desc):
     m_Worker(worker),

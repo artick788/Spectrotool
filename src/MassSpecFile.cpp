@@ -63,6 +63,21 @@ namespace Spectrotool{
         }
     }
 
+    nlohmann::json MassSpecFile::toJson() const {
+        nlohmann::json json;
+        for (const auto& compound: m_Compounds) {
+            json[compound.getName()] = compound.toJson();
+        }
+        return json;
+    }
+
+    void MassSpecFile::fromJson(const nlohmann::json &json) {
+        for (const auto& [name, compoundJson]: json.items()) {
+            m_Compounds.emplace_back(name);
+            m_Compounds.back().fromJson(compoundJson);
+        }
+    }
+
     void MassSpecFile::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc){
         Compound* currentCompound = nullptr;
         static std::string compoundName = "Compound ";

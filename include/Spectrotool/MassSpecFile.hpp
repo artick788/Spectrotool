@@ -33,6 +33,10 @@ namespace Spectrotool{
 
         void setSampleInfo(const SampleListFile& sampleListFile);
 
+        nlohmann::json toJson() const;
+
+        void fromJson(const nlohmann::json& json);
+
     private:
         void loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc);
 

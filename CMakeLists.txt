@@ -7,6 +7,8 @@ include(cmake/CMakeLibs.cmake)
 fetch_openxlsx()
 fetch_syriuscore()
 
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+
 set(SPECTROTOOL_HEADERS
     include/Spectrotool/Compound.hpp
     include/Spectrotool/Defs.hpp
@@ -15,7 +17,7 @@ set(SPECTROTOOL_HEADERS
 )
 
 set(SPECTROTOOL_SRC
-    src/json.hpp
+        include/Spectrotool/json.hpp
     src/Compound.cpp
     src/MassSpecFile.cpp
         src/SampleListFile.cpp

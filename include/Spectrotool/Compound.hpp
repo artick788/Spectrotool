@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_set>
 #include "SampleListFile.hpp"
+#include "json.hpp"
 
 namespace Spectrotool {
 
@@ -20,6 +21,10 @@ namespace Spectrotool {
         std::string matrix;
 
         std::string str() const;
+
+        nlohmann::json toJson() const;
+
+        void fromJson(const nlohmann::json& json);
     };
 
     class Compound {
@@ -37,6 +42,10 @@ namespace Spectrotool {
         std::string str() const;
 
         void setSampleInfo(const SampleListFile& sampleListFile);
+
+        nlohmann::json toJson() const;
+
+        void fromJson(const nlohmann::json& json);
 
     private:
         std::string m_Name;

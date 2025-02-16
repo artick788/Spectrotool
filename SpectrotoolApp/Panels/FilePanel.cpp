@@ -17,7 +17,7 @@ namespace Spectrotool {
 
     void FilePanel::renderPanelContent(WindowSize &size) {
         ImGui::SetNextWindowPos({size.x, size.y});
-        ImGui::SetNextWindowSize({300.0f, m_Window->getHeight() - size.y});
+        ImGui::SetNextWindowSize({size.width, size.height});
         ImGui::Begin("FilePanel", nullptr, ImGuiWindowFlags_NoTitleBar |
                                              ImGuiWindowFlags_NoResize);
 

@@ -21,6 +21,8 @@ namespace Spectrotool{
 
         const ProjectDesc& getDesc() const { return m_Desc; }
 
+        const UP<MassSpecFile>& getMassSpecFile() const { return m_MassSpecFile; }
+
     private:
         ProjectDesc m_Desc;
         bool m_ProjectLoading = false;

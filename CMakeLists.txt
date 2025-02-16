@@ -38,7 +38,9 @@ set(SPECTROTOOL_APP_SRC
     SpectrotoolApp/Worker.cpp
     SpectrotoolApp/Worker.hpp
     SpectrotoolApp/Project.cpp
-    SpectrotoolApp/Project.hpp)
+    SpectrotoolApp/Project.hpp
+    SpectrotoolApp/Panels/ProjectPanel.cpp
+    SpectrotoolApp/Panels/ProjectPanel.hpp)
 
 add_executable(SpectrotoolApp main.cpp ${SPECTROTOOL_APP_SRC})
 target_link_libraries(SpectrotoolApp Spectrotool SyriusCore)

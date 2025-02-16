@@ -19,6 +19,7 @@ namespace Spectrotool {
         m_Store = createUP<Store>();
         m_MenuPanel = createUP<MenuPanel>(m_Window, m_Context, m_Store);
         m_FilePanel = createUP<FilePanel>(m_Window, m_Context, m_Store);
+        m_ProjectPanel = createUP<ProjectPanel>(m_Window, m_Context, m_Store);
     }
 
     void SpectrotoolApp::run() {
@@ -52,8 +53,20 @@ namespace Spectrotool {
 
         WindowSize size;
         m_MenuPanel->render(size);
-        size.y += s_MENUBAR_HEIGHT;
-        m_FilePanel->render(size);
+        WindowSize leftSize;
+        leftSize.x = 0.0f;
+        leftSize.y += s_MENUBAR_HEIGHT;
+        leftSize.width = 300.0f;
+        leftSize.height = m_Window->getHeight() - s_MENUBAR_HEIGHT;
+        m_FilePanel->render(leftSize);
+
+        WindowSize rightSize;
+        rightSize.x = leftSize.width;
+        rightSize.y += s_MENUBAR_HEIGHT;
+        rightSize.width = m_Window->getWidth() - leftSize.width;
+        rightSize.height = m_Window->getHeight() - s_MENUBAR_HEIGHT;
+        m_ProjectPanel->render(rightSize);
+
 
         m_Store->renderErrorMsg();
         m_Window->onImGuiEnd();

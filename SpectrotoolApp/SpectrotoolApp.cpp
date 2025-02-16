@@ -10,7 +10,7 @@ namespace Spectrotool {
         m_Window = createWindow(wDesc);
 
         ContextDesc cDesc;
-        cDesc.api = SR_API_D3D11;
+        cDesc.api = SR_API_OPENGL;
         m_Context = m_Window->createContext(cDesc);
         m_Context->setVerticalSynchronisation(true);
         m_Context->setClearColor(1.0f, 0.0, 0.0, 1.0f);
@@ -44,6 +44,10 @@ namespace Spectrotool {
                 m_Window->close();
                 break;
             }
+            case SR_EVENT_WINDOW_RESIZED: {
+                m_Context->onResize(event.windowWidth, event.windowWidth);
+                break;
+            }
             default: break;
         }
     }
@@ -51,8 +55,13 @@ namespace Spectrotool {
     void SpectrotoolApp::renderImGui() {
         m_Window->onImGuiBegin();
 
-        WindowSize size;
-        m_MenuPanel->render(size);
+        WindowSize menuSize;
+        menuSize.x = 0.0f;
+        menuSize.y = 0.0f;
+        menuSize.width = m_Window->getWidth();
+        menuSize.height = s_MENUBAR_HEIGHT;
+        m_MenuPanel->render(menuSize);
+
         WindowSize leftSize;
         leftSize.x = 0.0f;
         leftSize.y += s_MENUBAR_HEIGHT;

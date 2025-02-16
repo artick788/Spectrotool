@@ -8,11 +8,14 @@
 namespace Spectrotool{
 
     struct MassSpecFileDesc{
+        std::string excludeFilter = "";
         std::vector<std::string> sheetNames = {"Polar", "Neutral", "Apolar"};
     };
 
     class MassSpecFile{
     public:
+        MassSpecFile() = default;
+
         explicit MassSpecFile(const fs::path& path, const MassSpecFileDesc& desc = MassSpecFileDesc());
 
         ~MassSpecFile() = default;
@@ -24,7 +27,9 @@ namespace Spectrotool{
         std::vector<Compound*> getCompound(const std::string& name);
 
     private:
-        void loadWorkSheet(const OpenXLSX::XLWorksheet& sheet);
+        void loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc);
+
+        static bool filterCompound(const std::string& name, const std::string& filter);
 
         static std::string formatCompoundName(const std::string& name);
 

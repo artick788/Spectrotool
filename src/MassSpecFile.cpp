@@ -15,7 +15,7 @@ namespace Spectrotool{
             if (!doc.workbook().worksheetExists(sheetName)) {
                 throw std::runtime_error("Sheet: " + sheetName + " + does not exist in file: " + path.string());
             }
-            loadWorkSheet(doc.workbook().worksheet(sheetName));
+            loadWorkSheet(doc.workbook().worksheet(sheetName), desc);
         }
     }
 
@@ -39,7 +39,7 @@ namespace Spectrotool{
     }
 
 
-    void MassSpecFile::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet){
+    void MassSpecFile::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc){
         Compound* currentCompound = nullptr;
         uint32_t nextCompound = 1;
         static std::string compoundName = "Compound ";
@@ -57,6 +57,11 @@ namespace Spectrotool{
                     if (m_CompoundNames.find(value) != m_CompoundNames.end()) {
                         throw std::runtime_error("Duplicate compound name: " + value);
                     }
+                    if (!desc.excludeFilter.empty() && filterCompound(value, desc.excludeFilter)) {
+                        currentCompound = nullptr; // Skip all subsequent rows until the next compound is found
+                        nextCompound++;
+                        continue;
+                    }
                     m_Compounds.emplace_back(formatCompoundName(value));
                     currentCompound = &m_Compounds.back();
                     nextCompound++;
@@ -71,6 +76,10 @@ namespace Spectrotool{
             }
             rowNumber++;
         }
+    }
+
+    bool MassSpecFile::filterCompound(const std::string &name, const std::string &filter) {
+        return name.find(filter) != std::string::npos;
     }
 
     std::string MassSpecFile::formatCompoundName(const std::string &name) {

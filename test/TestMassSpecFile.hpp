@@ -12,6 +12,4 @@ protected:
 
     void TearDown() override;
 
-protected:
-    fs::path m_HappyDayFile;
 };

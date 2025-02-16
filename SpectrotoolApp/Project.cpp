@@ -7,7 +7,7 @@ namespace Spectrotool{
     m_Desc(desc){
         m_ProjectLoading = true;
         m_Worker.addTask([this](){
-            m_MassSpecFile = createUP<MassSpecFile>(m_Desc.m_MassSpecFilePath, m_Desc.m_MassSpecFileDesc);
+            m_MassSpecFile = createUP<MassSpecFile>(m_Desc.massSpecFileDesc);
             m_ProjectLoading = false;
         });
 

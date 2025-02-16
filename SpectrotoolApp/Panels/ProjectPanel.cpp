@@ -27,8 +27,7 @@ namespace Spectrotool{
         }
         const auto& compounds = project->getMassSpecFile()->getCompounds();
         if (ImGui::BeginTabBar("CompoundList")){
-            for (std::size_t ind = 0; ind < compounds.size(); ++ind){
-                const auto& compound = compounds[ind];
+            for (const auto & compound : compounds){
                 if (ImGui::BeginTabItem(compound.getName().c_str())){
                     ImGui::Text("Name: %s", compound.getName().c_str());
                     renderCompound(compound);
@@ -41,7 +40,7 @@ namespace Spectrotool{
 
     }
 
-    void ProjectPanel::renderCompound(const Spectrotool::Compound &compound) {
+    void ProjectPanel::renderCompound(const Compound &compound) {
         ImGui::Columns(6, "CompoundColumns");
         ImGui::Separator();
         // First the header

@@ -9,9 +9,11 @@ void TestMassSpecFile::TearDown() {
 }
 
 TEST_F(TestMassSpecFile, TestHappyDayParse) {
-    fs::path happyDayFile = fs::current_path() / "TestResources" / "HappyDay" / "220115_PFASFORWARD_VMM.xlsx";
-    MassSpecFile worksheet(happyDayFile);
+    MassSpecFileDesc desc;
+    desc.filePath = fs::current_path() / "TestResources" / "HappyDay" / "220115_PFASFORWARD_VMM.xlsx";
+    MassSpecFile worksheet(desc);
     EXPECT_EQ(worksheet.getCompounds().size(), 71);
+    EXPECT_EQ(worksheet.getSampleCount(), 6382);
 
     // grab compound Me PFBSA
     auto c1 = worksheet.getCompound("Me PFBSA");
@@ -27,10 +29,10 @@ TEST_F(TestMassSpecFile, TestHappyDayParse) {
 }
 
 TEST_F(TestMassSpecFile, TestHappyDayParseWithFilter) {
-    fs::path smallHappyDayFile = fs::current_path() / "TestResources" / "HappyDaySmall" / "220115_PFASFORWARD_VMM.xlsx";
     MassSpecFileDesc desc;
+    desc.filePath = fs::current_path() / "TestResources" / "HappyDaySmall" / "220115_PFASFORWARD_VMM.xlsx";
     desc.sheetNames = {"Polar"};
-    MassSpecFile worksheet(smallHappyDayFile, desc);
+    MassSpecFile worksheet(desc);
 
     // Sanity check
     auto compounds = worksheet.getCompounds();
@@ -44,7 +46,7 @@ TEST_F(TestMassSpecFile, TestHappyDayParseWithFilter) {
 
     // Now read again with filter
     desc.excludeFilter = "Me";
-    MassSpecFile worksheet2(smallHappyDayFile, desc);
+    MassSpecFile worksheet2(desc);
     compounds = worksheet2.getCompounds();
     EXPECT_EQ(worksheet2.getCompounds().size(), 1);
     if (compounds.size() == 1) {

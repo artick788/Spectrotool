@@ -4,16 +4,16 @@
 
 namespace Spectrotool{
 
-    MassSpecFile::MassSpecFile(const fs::path& path, const MassSpecFileDesc& desc){
-        if (!fs::exists(path)){
-            throw std::runtime_error("File does not exist: " + path.string());
+    MassSpecFile::MassSpecFile(const MassSpecFileDesc& desc){
+        if (!fs::exists(desc.filePath)){
+            throw std::runtime_error("File does not exist: " + desc.filePath.string());
         }
 
         OpenXLSX::XLDocument doc;
-        doc.open(path.string());
+        doc.open(desc.filePath.string());
         for (const auto& sheetName: desc.sheetNames) {
             if (!doc.workbook().worksheetExists(sheetName)) {
-                throw std::runtime_error("Sheet: " + sheetName + " + does not exist in file: " + path.string());
+                throw std::runtime_error("Sheet: " + sheetName + " does not exist in file: " + desc.filePath.string());
             }
             loadWorkSheet(doc.workbook().worksheet(sheetName), desc);
         }
@@ -57,6 +57,7 @@ namespace Spectrotool{
                     if (m_CompoundNames.find(value) != m_CompoundNames.end()) {
                         throw std::runtime_error("Duplicate compound name: " + value);
                     }
+                    m_ReadCompoundCount++;
                     if (!desc.excludeFilter.empty() && filterCompound(value, desc.excludeFilter)) {
                         currentCompound = nullptr; // Skip all subsequent rows until the next compound is found
                         nextCompound++;
@@ -73,6 +74,7 @@ namespace Spectrotool{
                     continue;
                 }
                 addCompound(*currentCompound, row);
+                m_SampleCount++;
             }
             rowNumber++;
         }

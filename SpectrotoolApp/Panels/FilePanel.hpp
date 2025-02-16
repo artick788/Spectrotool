@@ -18,10 +18,11 @@ namespace Spectrotool {
 
         void renderFileSelector();
 
-        void renderProjectOverview();
+        void renderProjectOverview() const;
 
     private:
         bool m_OpenFileSelector = false;
+        ProjectDesc m_ProjectDesc;
 
     };
 

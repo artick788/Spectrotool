@@ -8,7 +8,8 @@
 namespace Spectrotool{
 
     struct MassSpecFileDesc{
-        std::string excludeFilter = "";
+        fs::path filePath;
+        std::string excludeFilter;
         std::vector<std::string> sheetNames = {"Polar", "Neutral", "Apolar"};
     };
 
@@ -16,11 +17,15 @@ namespace Spectrotool{
     public:
         MassSpecFile() = default;
 
-        explicit MassSpecFile(const fs::path& path, const MassSpecFileDesc& desc = MassSpecFileDesc());
+        explicit MassSpecFile(const MassSpecFileDesc& desc = MassSpecFileDesc());
 
         ~MassSpecFile() = default;
 
         const std::vector<Compound>& getCompounds() const { return m_Compounds; }
+
+        std::size_t getReadCompoundCount() const { return m_ReadCompoundCount; }
+
+        std::size_t getSampleCount() const { return m_SampleCount; }
 
         bool hasCompound(const std::string& name) const;
 
@@ -36,6 +41,8 @@ namespace Spectrotool{
         static void addCompound(Compound& compound, const OpenXLSX::XLCell& row);
 
     private:
+        std::size_t m_ReadCompoundCount = 0;
+        std::size_t m_SampleCount = 0;
         std::vector<Compound> m_Compounds;
         std::unordered_set<std::string> m_CompoundNames;
     };

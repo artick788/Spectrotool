@@ -42,24 +42,31 @@ namespace Spectrotool {
         static std::string massSpecFile;
         static std::string sampleListFile;
         if (ImGui::Button("Load Mass Spec file", {200.0f, 20.0f})) {
-            massSpecFile = m_Window->openFileDialog(".xlsx");
+           massSpecFile = m_Window->openFileDialog(".xlsx");
         }
         ImGui::SameLine();
-        ImGui::Text("%s", massSpecFile.c_str());
+        ImGui::Text("%s",   massSpecFile.c_str());
         if (ImGui::Button("Load Sample List file", {200.0f, 20.0f})) {
             sampleListFile = m_Window->openFileDialog(".xlsx");
         }
         ImGui::SameLine();
         ImGui::Text("%s", sampleListFile.c_str());
 
+        ImGui::Separator();
+        ImGui::Text("Exclude compounds containing: ");
+        ImGui::InputTextWithHint("##excludeFilter", "Filter", &m_ProjectDesc.massSpecFileDesc.excludeFilter);
+
         ImGui::NewLine();
         if (fs::exists(massSpecFile) && fs::exists(sampleListFile)) {
             if (ImGui::Button("Load", {96.0f, 20.0f})) {
-                ProjectDesc desc;
-                desc.m_MassSpecFilePath = massSpecFile;
-                desc.m_SampleListFilePath = sampleListFile;
-                m_Store->loadProject(desc);
+                m_ProjectDesc.massSpecFileDesc.filePath = massSpecFile;
+                m_ProjectDesc.sampleListFilePath = sampleListFile;
+                m_Store->loadProject(m_ProjectDesc);
                 m_OpenFileSelector = false;
+                massSpecFile.clear();
+                sampleListFile.clear();
+                m_ProjectDesc.massSpecFileDesc.excludeFilter.clear();
+
             }
             ImGui::SameLine();
         }
@@ -73,15 +80,15 @@ namespace Spectrotool {
 
     }
 
-    void FilePanel::renderProjectOverview() {
+    void FilePanel::renderProjectOverview() const {
         if (m_Store->isProjectLoading()){
             ImGui::Text("Loading project...");
             return;
         }
-        ImGui::Text("Mass Spec file: %ls", m_Store->getProject()->getDesc().m_MassSpecFilePath.c_str());
-        ImGui::Text("Sample List file: %ls", m_Store->getProject()->getDesc().m_SampleListFilePath.c_str());
-
-
+        ImGui::Text("Mass Spec file: %ls", m_Store->getProject()->getDesc().massSpecFileDesc.filePath.c_str());
+        ImGui::Text("Sample List file: %ls", m_Store->getProject()->getDesc().sampleListFilePath.c_str());
+        ImGui::Text("%d of %d Compounds selected", m_Store->getProject()->getMassSpecFile()->getCompounds().size(),  m_Store->getProject()->getMassSpecFile()->getReadCompoundCount());
+        ImGui::Text("%d Samples", m_Store->getProject()->getMassSpecFile()->getSampleCount());
     }
 
 

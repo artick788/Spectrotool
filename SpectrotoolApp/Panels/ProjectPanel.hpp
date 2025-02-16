@@ -16,7 +16,7 @@ namespace Spectrotool{
 
             void renderProject(const UP<Project>& project);
 
-            void renderCompound(const Compound& compound);
+            static void renderCompound(const Compound& compound);
 
         };
 

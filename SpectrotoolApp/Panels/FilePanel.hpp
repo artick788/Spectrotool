@@ -16,10 +16,12 @@ namespace Spectrotool {
 
         void renderPanelContent(WindowSize &size);
 
-        void renderOpenVMM();
+        void renderFileSelector();
+
+        void renderProjectOverview();
 
     private:
-        bool m_OpenVMM = false;
+        bool m_OpenFileSelector = false;
 
     };
 

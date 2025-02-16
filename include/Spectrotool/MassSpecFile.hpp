@@ -7,13 +7,13 @@
 
 namespace Spectrotool{
 
-    struct WorksheetDesc{
+    struct MassSpecFileDesc{
         std::vector<std::string> sheetNames = {"Polar", "Neutral", "Apolar"};
     };
 
     class MassSpecFile{
     public:
-        explicit MassSpecFile(const fs::path& path, const WorksheetDesc& desc = WorksheetDesc());
+        explicit MassSpecFile(const fs::path& path, const MassSpecFileDesc& desc = MassSpecFileDesc());
 
         ~MassSpecFile() = default;
 

@@ -4,7 +4,7 @@
 
 namespace Spectrotool{
 
-    MassSpecFile::MassSpecFile(const fs::path& path, const WorksheetDesc& desc){
+    MassSpecFile::MassSpecFile(const fs::path& path, const MassSpecFileDesc& desc){
         if (!fs::exists(path)){
             throw std::runtime_error("File does not exist: " + path.string());
         }

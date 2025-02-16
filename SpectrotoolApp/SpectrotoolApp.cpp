@@ -55,6 +55,7 @@ namespace Spectrotool {
         size.y += s_MENUBAR_HEIGHT;
         m_FilePanel->render(size);
 
+        m_Store->renderErrorMsg();
         m_Window->onImGuiEnd();
     }
 

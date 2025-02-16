@@ -21,6 +21,7 @@ namespace Spectrotool {
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("About")) {
+                ImGui::MenuItem("Version: 0.1", nullptr, false, false);
 
                 ImGui::EndMenu();
             }

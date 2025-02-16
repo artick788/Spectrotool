@@ -1,4 +1,5 @@
 #include "FilePanel.hpp"
+#include "../Project.hpp"
 
 namespace Spectrotool {
 
@@ -9,8 +10,8 @@ namespace Spectrotool {
 
     void FilePanel::render(WindowSize &size) {
         renderPanelContent(size);
-        if (m_OpenVMM) {
-            renderOpenVMM();
+        if (m_OpenFileSelector) {
+            renderFileSelector();
         }
     }
 
@@ -20,25 +21,19 @@ namespace Spectrotool {
         ImGui::Begin("FilePanel", nullptr, ImGuiWindowFlags_NoTitleBar |
                                              ImGuiWindowFlags_NoResize);
 
-        ImGui::Text("Upload new readings");
+        ImGui::Text("Upload new readings"); ImGui::SameLine();
+        if (ImGui::Button("Open", {50.0f, 20.0f})) {
+            m_OpenFileSelector = true;
+        }
         ImGui::Separator();
-        ImGui::Text("Method"); ImGui::SameLine();
-        if (ImGui::Button("VMM", {50.0f, 20.0f})) {
-            m_OpenVMM = true;
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("EPA", {50.0f, 20.0f})) {
-            std::cout << "EPA" << std::endl;
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("DYI", {50.0f, 20.0f})) {
-            std::cout << "Coming Soon..." << std::endl;
+        if (m_Store->getProject() != nullptr){
+            renderProjectOverview();
         }
 
         ImGui::End();
     }
 
-    void FilePanel::renderOpenVMM() {
+    void FilePanel::renderFileSelector() {
         static float windowWidth = 500.0f;
         static float windowHeight = 300.0f;
         ImGui::SetNextWindowSize({windowWidth, windowHeight});
@@ -50,27 +45,42 @@ namespace Spectrotool {
             massSpecFile = m_Window->openFileDialog(".xlsx");
         }
         ImGui::SameLine();
-        ImGui::Text(massSpecFile.c_str());
+        ImGui::Text("%s", massSpecFile.c_str());
         if (ImGui::Button("Load Sample List file", {200.0f, 20.0f})) {
             sampleListFile = m_Window->openFileDialog(".xlsx");
         }
         ImGui::SameLine();
-        ImGui::Text(sampleListFile.c_str());
+        ImGui::Text("%s", sampleListFile.c_str());
 
         ImGui::NewLine();
         if (fs::exists(massSpecFile) && fs::exists(sampleListFile)) {
             if (ImGui::Button("Load", {96.0f, 20.0f})) {
-                std::cout << "Loading files..." << std::endl;
+                ProjectDesc desc;
+                desc.m_MassSpecFilePath = massSpecFile;
+                desc.m_SampleListFilePath = sampleListFile;
+                m_Store->loadProject(desc);
+                m_OpenFileSelector = false;
             }
             ImGui::SameLine();
         }
         if (ImGui::Button("Close", {96.0f, 20.0f})) {
-            m_OpenVMM = false;
+            m_OpenFileSelector = false;
         }
         auto sizes = ImGui::GetWindowSize();
         windowWidth = sizes.x;
         windowHeight = sizes.y;
         ImGui::End();
+
+    }
+
+    void FilePanel::renderProjectOverview() {
+        if (m_Store->isProjectLoading()){
+            ImGui::Text("Loading project...");
+            return;
+        }
+        ImGui::Text("Mass Spec file: %ls", m_Store->getProject()->getDesc().m_MassSpecFilePath.c_str());
+        ImGui::Text("Sample List file: %ls", m_Store->getProject()->getDesc().m_SampleListFilePath.c_str());
+
 
     }
 

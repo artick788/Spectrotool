@@ -8,6 +8,8 @@ namespace Spectrotool{
         m_ProjectLoading = true;
         m_Worker.addTask([this](){
             m_MassSpecFile = createUP<MassSpecFile>(m_Desc.massSpecFileDesc);
+            const SampleListFile sampleListFile(m_Desc.sampleListFileDesc);
+            m_MassSpecFile->setSampleInfo(sampleListFile);
             m_ProjectLoading = false;
         });
 

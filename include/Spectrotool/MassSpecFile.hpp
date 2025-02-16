@@ -31,6 +31,8 @@ namespace Spectrotool{
 
         std::vector<Compound*> getCompound(const std::string& name);
 
+        void setSampleInfo(const SampleListFile& sampleListFile);
+
     private:
         void loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc);
 

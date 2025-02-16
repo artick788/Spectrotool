@@ -57,6 +57,11 @@ namespace Spectrotool{
         return result;
     }
 
+    void MassSpecFile::setSampleInfo(const SampleListFile &sampleListFile) {
+        for (auto& compound: m_Compounds) {
+            compound.setSampleInfo(sampleListFile);
+        }
+    }
 
     void MassSpecFile::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc){
         Compound* currentCompound = nullptr;

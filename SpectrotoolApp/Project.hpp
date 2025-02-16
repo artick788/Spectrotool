@@ -7,7 +7,7 @@ namespace Spectrotool{
 
     struct ProjectDesc{
         MassSpecFileDesc massSpecFileDesc;
-        fs::path sampleListFilePath;
+        SampleListFileDesc sampleListFileDesc;
     };
 
     class Project{

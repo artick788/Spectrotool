@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include "SampleListFile.hpp"
 
 namespace Spectrotool {
 
@@ -13,6 +14,10 @@ namespace Spectrotool {
         double area = 0.0;
         double isArea = 0.0;
         double sDivN = 0.0;
+
+        // data from SampleListFile
+        double weight = 0.0; // Grams
+        std::string matrix;
 
         std::string str() const;
     };
@@ -30,6 +35,8 @@ namespace Spectrotool {
         [[nodiscard]] const std::vector<CompoundValue>& getValues() const { return m_Values; }
 
         std::string str() const;
+
+        void setSampleInfo(const SampleListFile& sampleListFile);
 
     private:
         std::string m_Name;

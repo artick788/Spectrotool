@@ -33,5 +33,16 @@ namespace Spectrotool {
         return result;
     }
 
+    void Compound::setSampleInfo(const SampleListFile &sampleListFile) {
+        for (auto& value : m_Values) {
+            if (sampleListFile.hasSample(value.id)) {
+                const auto sampleInfo = sampleListFile[value.id];
+                value.weight = sampleInfo.weight;
+                value.matrix = sampleInfo.matrix;
+            }
+        }
+    }
+
+
 
 }

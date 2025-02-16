@@ -60,7 +60,7 @@ namespace Spectrotool {
         if (fs::exists(massSpecFile) && fs::exists(sampleListFile)) {
             if (ImGui::Button("Load", {96.0f, 20.0f})) {
                 m_ProjectDesc.massSpecFileDesc.filePath = massSpecFile;
-                m_ProjectDesc.sampleListFilePath = sampleListFile;
+                m_ProjectDesc.sampleListFileDesc.filePath = sampleListFile;
                 m_Store->loadProject(m_ProjectDesc);
                 m_OpenFileSelector = false;
                 massSpecFile.clear();
@@ -86,7 +86,7 @@ namespace Spectrotool {
             return;
         }
         ImGui::Text("Mass Spec file: %ls", m_Store->getProject()->getDesc().massSpecFileDesc.filePath.c_str());
-        ImGui::Text("Sample List file: %ls", m_Store->getProject()->getDesc().sampleListFilePath.c_str());
+        ImGui::Text("Sample List file: %ls", m_Store->getProject()->getDesc().sampleListFileDesc.filePath.c_str());
         ImGui::Text("%d of %d Compounds selected", m_Store->getProject()->getMassSpecFile()->getCompounds().size(),  m_Store->getProject()->getMassSpecFile()->getReadCompoundCount());
         ImGui::Text("%d Samples", m_Store->getProject()->getMassSpecFile()->getSampleCount());
     }

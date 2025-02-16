@@ -2,6 +2,7 @@
 
 #include <SyriusCore/SyriusCore.hpp>
 #include <Spectrotool/MassSpecFile.hpp>
+#include <Spectrotool/SampleListFile.hpp>
 
 namespace Spectrotool {
 

@@ -26,6 +26,8 @@ namespace Spectrotool {
 
         const SampleInfo& operator[](const std::string& id) const { return m_Samples.at(id); }
 
+        bool hasSample(const std::string& id) const { return m_Samples.find(id) != m_Samples.end(); }
+
     private:
 
         void loadSheet(const OpenXLSX::XLWorksheet& sheet);

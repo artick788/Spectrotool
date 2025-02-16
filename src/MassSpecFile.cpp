@@ -4,6 +4,25 @@
 
 namespace Spectrotool{
 
+    void addCompound(Compound &compound, const OpenXLSX::XLCell &row) {
+        CompoundValue value;
+        value.name = row.offset(0, 2).value().getString();
+        value.id = row.offset(0, 3).value().getString();
+        if (const std::string rt = row.offset(0, 4).value().getString(); !rt.empty()) {
+            value.rt = std::stod(rt);
+        }
+        if (const std::string area = row.offset(0, 5).value().getString(); !area.empty()) {
+            value.area = std::stod(area);
+        }
+        if (const std::string isArea = row.offset(0, 6).value().getString(); !isArea.empty()) {
+            value.isArea = std::stod(isArea);
+        }
+        if (const std::string sDivN = row.offset(0, 7).value().getString(); !sDivN.empty()) {
+            value.sDivN = std::stod(sDivN);
+        }
+        compound.addValue(std::move(value));
+    }
+
     MassSpecFile::MassSpecFile(const MassSpecFileDesc& desc){
         if (!fs::exists(desc.filePath)){
             throw std::runtime_error("File does not exist: " + desc.filePath.string());
@@ -41,31 +60,25 @@ namespace Spectrotool{
 
     void MassSpecFile::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc){
         Compound* currentCompound = nullptr;
-        uint32_t nextCompound = 1;
         static std::string compoundName = "Compound ";
 
         // Specify a quadratic region that is 1 column wide and as long as the sheet
-        const auto range = sheet.range(OpenXLSX::XLCellReference("A1"), OpenXLSX::XLCellReference(sheet.rowCount(), 1));
-        uint64_t rowNumber = 1;
+        const auto range = sheet.range(OpenXLSX::XLCellReference("A4"), OpenXLSX::XLCellReference(sheet.rowCount(), 1));
         for (const auto& row: range) {
             // If the cell is a string, check if it contains the compound name
             if (row.value().type() == OpenXLSX::XLValueType::String) {
-                std::string value = row.value();
-                std::string nextCompoundField = compoundName + std::to_string(nextCompound);
                 // Create a new compound and format the name
-                if (value.find(nextCompoundField) != std::string::npos) {
+                if (std::string value = row.value(); value.find(compoundName) != std::string::npos) {
                     if (m_CompoundNames.find(value) != m_CompoundNames.end()) {
                         throw std::runtime_error("Duplicate compound name: " + value);
                     }
                     m_ReadCompoundCount++;
                     if (!desc.excludeFilter.empty() && filterCompound(value, desc.excludeFilter)) {
                         currentCompound = nullptr; // Skip all subsequent rows until the next compound is found
-                        nextCompound++;
                         continue;
                     }
                     m_Compounds.emplace_back(formatCompoundName(value));
                     currentCompound = &m_Compounds.back();
-                    nextCompound++;
                 }
             }
             // If the cell contains an int, then we know that this row contains a compound entry and we should add if to the current compound
@@ -76,7 +89,6 @@ namespace Spectrotool{
                 addCompound(*currentCompound, row);
                 m_SampleCount++;
             }
-            rowNumber++;
         }
     }
 
@@ -99,25 +111,6 @@ namespace Spectrotool{
             extracted.erase(0, start_str);
         }
         return extracted;
-    }
-
-    void MassSpecFile::addCompound(Compound &compound, const OpenXLSX::XLCell &row) {
-        CompoundValue value;
-        value.name = row.offset(0, 2).value().getString();
-        value.id = row.offset(0, 3).value().getString();
-        if (const std::string rt = row.offset(0, 4).value().getString(); !rt.empty()) {
-            value.rt = std::stod(rt);
-        }
-        if (const std::string area = row.offset(0, 5).value().getString(); !area.empty()) {
-            value.area = std::stod(area);
-        }
-        if (const std::string isArea = row.offset(0, 6).value().getString(); !isArea.empty()) {
-            value.isArea = std::stod(isArea);
-        }
-        if (const std::string sDivN = row.offset(0, 7).value().getString(); !sDivN.empty()) {
-            value.sDivN = std::stod(sDivN);
-        }
-        compound.addValue(std::move(value));
     }
 
 }

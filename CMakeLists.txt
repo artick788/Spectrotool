@@ -11,12 +11,14 @@ set(SPECTROTOOL_HEADERS
     include/Spectrotool/Compound.hpp
     include/Spectrotool/Defs.hpp
     include/Spectrotool/MassSpecFile.hpp
+        include/Spectrotool/SampleListFile.hpp
 )
 
 set(SPECTROTOOL_SRC
     src/json.hpp
     src/Compound.cpp
     src/MassSpecFile.cpp
+        src/SampleListFile.cpp
 )
 
 add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})
@@ -54,7 +56,9 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
 
     add_executable(SpectrotoolTest ${SPECTROTOOL_SRC}
             test/TestMassSpecFile.cpp
-            test/TestMassSpecFile.hpp)
+            test/TestMassSpecFile.hpp
+            test/TestSampleListFile.cpp
+            test/TestSampleListFile.hpp)
     add_dependencies(SpectrotoolTest gtest)
 
     target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX)

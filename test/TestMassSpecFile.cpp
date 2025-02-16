@@ -8,7 +8,7 @@ void TestMassSpecFile::TearDown() {
 
 }
 
-TEST_F(TestMassSpecFile, TestHappyDayParse) {
+TEST_F(TestMassSpecFile, HappyDayParse) {
     MassSpecFileDesc desc;
     desc.filePath = fs::current_path() / "TestResources" / "HappyDay" / "220115_PFASFORWARD_VMM.xlsx";
     MassSpecFile worksheet(desc);
@@ -28,7 +28,7 @@ TEST_F(TestMassSpecFile, TestHappyDayParse) {
     EXPECT_EQ(c3.size(), 2); // should only be one compound with this name
 }
 
-TEST_F(TestMassSpecFile, TestHappyDayParseWithFilter) {
+TEST_F(TestMassSpecFile, HappyDayParseWithFilter) {
     MassSpecFileDesc desc;
     desc.filePath = fs::current_path() / "TestResources" / "HappyDaySmall" / "220115_PFASFORWARD_VMM.xlsx";
     desc.sheetNames = {"Polar"};

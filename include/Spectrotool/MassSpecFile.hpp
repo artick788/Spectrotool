@@ -17,7 +17,7 @@ namespace Spectrotool{
     public:
         MassSpecFile() = default;
 
-        explicit MassSpecFile(const MassSpecFileDesc& desc = MassSpecFileDesc());
+        explicit MassSpecFile(const MassSpecFileDesc& desc);
 
         ~MassSpecFile() = default;
 
@@ -37,8 +37,6 @@ namespace Spectrotool{
         static bool filterCompound(const std::string& name, const std::string& filter);
 
         static std::string formatCompoundName(const std::string& name);
-
-        static void addCompound(Compound& compound, const OpenXLSX::XLCell& row);
 
     private:
         std::size_t m_ReadCompoundCount = 0;

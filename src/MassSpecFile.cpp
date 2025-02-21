@@ -80,6 +80,48 @@ namespace Spectrotool{
         }
     }
 
+    void MassSpecFile::exportToExcel(const MassSpecFileExportDesc &config) const {
+        OpenXLSX::XLDocument doc;
+        std::cout << "Exporting to: " << config.filePath << std::endl;
+        doc.create(config.filePath.string(), OpenXLSX::XLForceOverwrite);
+        OpenXLSX::XLWorkbook wb = doc.workbook();
+        std::unordered_map<std::string, unsigned int> duplicateSheets;
+        for (const auto& compound: m_Compounds) {
+            std::string sheetName = compound.getName();
+            static const std::string invalidChars = "\\/:?*[]";
+            if (sheetName.find_first_of(invalidChars) != std::string::npos) {
+                std::cerr << "Invalid characters found in sheet name: " << sheetName << ", replacing with '_'" << std::endl;
+                for (const auto& c: invalidChars) {
+                    std::replace(sheetName.begin(), sheetName.end(), c, '_');
+                }
+            }
+            if (wb.worksheetExists(sheetName)) {
+                duplicateSheets[sheetName]++;
+                sheetName += "_" + std::to_string(duplicateSheets[sheetName]);
+                std::cerr << "Duplicate sheet name found: " << compound.getName() << ", renaming to: " << sheetName << std::endl;
+            }
+
+            wb.addWorksheet(sheetName);
+            OpenXLSX::XLWorksheet sheet = wb.worksheet(sheetName);
+            formatHeader(sheet);
+
+            std::size_t row = 2;
+            for (const auto& compoundValue: compound.getValues()) {
+                sheet.cell("A" + std::to_string(row)).value() = compoundValue.name;
+                sheet.cell("B" + std::to_string(row)).value() = compoundValue.id;
+                sheet.cell("C" + std::to_string(row)).value() = compoundValue.rt;
+                sheet.cell("D" + std::to_string(row)).value() = compoundValue.area;
+                sheet.cell("E" + std::to_string(row)).value() = compoundValue.isArea;
+                sheet.cell("F" + std::to_string(row)).value() = compoundValue.sDivN;
+                sheet.cell("G" + std::to_string(row)).value() = compoundValue.weight;
+                sheet.cell("H" + std::to_string(row)).value() = compoundValue.matrix;
+                row++;
+            }
+        }
+        doc.workbook().deleteSheet("Sheet1"); // Remove the default sheet
+        doc.save();
+    }
+
     void MassSpecFile::loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc){
         Compound* currentCompound = nullptr;
         static std::string compoundName = "Compound ";
@@ -133,6 +175,17 @@ namespace Spectrotool{
             extracted.erase(0, start_str);
         }
         return extracted;
+    }
+    
+    void MassSpecFile::formatHeader(const OpenXLSX::XLWorksheet &sheet){
+        sheet.cell("A1").value() = "Name";
+        sheet.cell("B1").value() = "ID";
+        sheet.cell("C1").value() = "RT";
+        sheet.cell("D1").value() = "Area";
+        sheet.cell("E1").value() = "IS Area";
+        sheet.cell("F1").value() = "S/N";
+        sheet.cell("G1").value() = "Weight";
+        sheet.cell("H1").value() = "Matrix";
     }
 
 }

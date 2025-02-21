@@ -13,6 +13,10 @@ namespace Spectrotool{
         std::vector<std::string> sheetNames = {"Polar", "Neutral", "Apolar"};
     };
 
+    struct MassSpecFileExportDesc {
+        fs::path filePath;
+    };
+
     class MassSpecFile{
     public:
         MassSpecFile() = default;
@@ -37,12 +41,16 @@ namespace Spectrotool{
 
         void fromJson(const nlohmann::json& json);
 
+        void exportToExcel(const MassSpecFileExportDesc& config) const;
+
     private:
         void loadWorkSheet(const OpenXLSX::XLWorksheet& sheet, const MassSpecFileDesc& desc);
 
         static bool filterCompound(const std::string& name, const std::string& filter);
 
         static std::string formatCompoundName(const std::string& name);
+
+        static void formatHeader(const OpenXLSX::XLWorksheet& sheet);
 
     private:
         std::size_t m_ReadCompoundCount = 0;

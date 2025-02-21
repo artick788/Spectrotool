@@ -54,3 +54,26 @@ TEST_F(TestMassSpecFile, HappyDayParseWithFilter) {
         EXPECT_EQ(pfbs.getValues().size(), 89); // ensure that subsequent compounds are not added to the previous compound
     }
 }
+
+TEST_F(TestMassSpecFile, HappyDayExport) {
+    MassSpecFileDesc desc;
+    desc.filePath = fs::current_path() / "TestResources" / "HappyDay" / "220115_PFASFORWARD_VMM.xlsx";
+    MassSpecFile worksheet(desc);
+
+    MassSpecFileExportDesc exportDesc;
+    exportDesc.filePath = fs::current_path() / "TestResources" / "HappyDay" / "220115_PFASFORWARD_VMM_export.xlsx";
+    worksheet.exportToExcel(exportDesc);
+
+}
+
+TEST_F(TestMassSpecFile, SmallHappyDayExport) {
+    MassSpecFileDesc desc;
+    desc.sheetNames = {"Polar"};
+    desc.filePath = fs::current_path() / "TestResources" / "HappyDaySmall" / "220115_PFASFORWARD_VMM.xlsx";
+    MassSpecFile worksheet(desc);
+
+    MassSpecFileExportDesc exportDesc;
+    exportDesc.filePath = fs::current_path() / "TestResources" / "HappyDaySmall" / "220115_PFASFORWARD_VMM_export.xlsx";
+    worksheet.exportToExcel(exportDesc);
+
+}

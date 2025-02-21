@@ -24,6 +24,10 @@ namespace Spectrotool{
 
         const UP<MassSpecFile>& getMassSpecFile() const { return m_MassSpecFile; }
 
+        void exportJson(const fs::path& path);
+
+        void exportExcel(const MassSpecFileExportDesc& desc);
+
     private:
         ProjectDesc m_Desc;
         bool m_ProjectLoading = false;

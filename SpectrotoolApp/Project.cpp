@@ -30,4 +30,24 @@ namespace Spectrotool{
 
     }
 
+    void Project::exportJson(const fs::path &path) {
+        m_ProjectLoading = true;
+        m_Worker.addTask([this, path] {
+            const auto json =m_MassSpecFile->toJson();
+            std::ofstream file(path);
+            file << json.dump(2);
+            file.close();
+            m_ProjectLoading = false;
+        });
+    }
+
+    void Project::exportExcel(const MassSpecFileExportDesc &desc) {
+        m_ProjectLoading = true;
+        m_Worker.addTask([this, desc] {
+            m_MassSpecFile->exportToExcel(desc);
+            m_ProjectLoading = false;
+        });
+    }
+
+
 }

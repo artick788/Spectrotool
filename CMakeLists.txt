@@ -4,10 +4,6 @@ project(Spectrotool)
 include(SyriusBuildUtils/CMakeUtils.cmake)
 include(cmake/CMakeLibs.cmake)
 
-if (MSVC)
-    add_compile_options(/MT)
-endif()
-
 fetch_openxlsx()
 fetch_syriuscore()
 

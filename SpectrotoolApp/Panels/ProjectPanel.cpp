@@ -17,7 +17,7 @@ namespace Spectrotool{
             renderProject(m_Store->getProject());
         }
         else {
-            ImGui::TextColored({1.0f, 0.0f, 0.0f, 1.0f}, "No project loaded! Please load some readings.");
+            ImGui::TextColored({1.0f, 0.0f, 0.0f, 1.0f}, "No project loaded! Please load some readings or open an existing project.");
         }
 
         ImGui::End();

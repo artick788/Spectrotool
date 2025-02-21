@@ -13,7 +13,10 @@ namespace Spectrotool{
         ImGui::Begin("Compounds", nullptr, ImGuiWindowFlags_NoTitleBar |
                                            ImGuiWindowFlags_NoResize);
 
-        if (m_Store->getProject() != nullptr){
+        if (m_Store->isProjectLoading()) {
+            ImGui::Text("Loading project...");
+        }
+        else if (m_Store->getProject() != nullptr){
             renderProject(m_Store->getProject());
         }
         else {
@@ -24,10 +27,6 @@ namespace Spectrotool{
     }
 
     void ProjectPanel::renderProject(const UP<Project> &project){
-        if (project->isProjectLoading()) {
-            ImGui::Text("Loading project...");
-            return;
-        }
         const auto& compounds = project->getMassSpecFile()->getCompounds();
         if (ImGui::BeginTabBar("CompoundList")){
             for (const auto & compound : compounds){

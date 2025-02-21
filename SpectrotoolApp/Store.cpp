@@ -24,19 +24,24 @@ namespace Spectrotool {
     }
 
     void Store::loadProject(const ProjectDesc& desc){
-        m_Project = createUP<Project>(m_Worker, desc);
+        loader([this, desc] {
+            m_Project = createUP<Project>(desc);
+        });
     }
 
     void Store::loadProjectStproj(const fs::path &stprojPath) {
-        m_Project = createUP<Project>(m_Worker, stprojPath);
+        loader([this, stprojPath] {
+            m_Project = createUP<Project>(stprojPath);
+        });
     }
 
 
     bool Store::isProjectLoading() const {
-        if (m_Project == nullptr){
-            return false;
-        }
-        return m_Project->isProjectLoading();
+        return m_IsProjectLoading;
+    }
+
+    const UP<Project>& Store::getProject() const {
+        return m_Project;
     }
 
 }

@@ -21,13 +21,14 @@ namespace Spectrotool {
         ImGui::Begin("FilePanel", nullptr, ImGuiWindowFlags_NoTitleBar |
                                              ImGuiWindowFlags_NoResize);
 
-        ImGui::Text("Upload new readings"); ImGui::SameLine();
-        if (ImGui::Button("Open", {50.0f, 20.0f})) {
-            m_OpenFileSelector = true;
-        }
-        ImGui::Separator();
         if (m_Store->getProject() != nullptr){
             renderProjectOverview();
+        }
+        else {
+            ImGui::Text("Upload new readings"); ImGui::SameLine();
+            if (ImGui::Button("Open", {50.0f, 20.0f})) {
+                m_OpenFileSelector = true;
+            }
         }
 
         ImGui::End();
@@ -77,7 +78,6 @@ namespace Spectrotool {
         windowWidth = sizes.x;
         windowHeight = sizes.y;
         ImGui::End();
-
     }
 
     void FilePanel::renderProjectOverview() const {
@@ -85,8 +85,6 @@ namespace Spectrotool {
             ImGui::Text("Loading project...");
             return;
         }
-        ImGui::Text("Mass Spec file: %ls", m_Store->getProject()->getDesc().massSpecFileDesc.filePath.c_str());
-        ImGui::Text("Sample List file: %ls", m_Store->getProject()->getDesc().sampleListFileDesc.filePath.c_str());
         ImGui::Text("%d of %d Compounds selected", m_Store->getProject()->getMassSpecFile()->getCompounds().size(),  m_Store->getProject()->getMassSpecFile()->getReadCompoundCount());
         ImGui::Text("%d Samples", m_Store->getProject()->getMassSpecFile()->getSampleCount());
     }

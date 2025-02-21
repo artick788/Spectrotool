@@ -75,6 +75,8 @@ namespace Spectrotool{
         for (const auto& [name, compoundJson]: json.items()) {
             m_Compounds.emplace_back(name);
             m_Compounds.back().fromJson(compoundJson);
+            m_ReadCompoundCount++;
+            m_SampleCount += m_Compounds.back().getValues().size();
         }
     }
 

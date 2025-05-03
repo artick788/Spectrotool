@@ -14,6 +14,7 @@ set(SPECTROTOOL_HEADERS
     include/Spectrotool/Defs.hpp
     include/Spectrotool/MassSpecFile.hpp
         include/Spectrotool/SampleListFile.hpp
+    include/Spectrotool/CorrectionFactor.hpp
 )
 
 set(SPECTROTOOL_SRC
@@ -21,6 +22,7 @@ set(SPECTROTOOL_SRC
     src/Compound.cpp
     src/MassSpecFile.cpp
         src/SampleListFile.cpp
+    src/CorrectionFactor.cpp
 )
 
 add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})

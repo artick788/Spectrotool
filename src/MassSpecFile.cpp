@@ -88,7 +88,7 @@ namespace Spectrotool{
         std::unordered_map<std::string, unsigned int> duplicateSheets;
         for (const auto& compound: m_Compounds) {
             std::string sheetName = compound.getName();
-            static const std::string invalidChars = "\\/:?*[]";
+            static const std::string invalidChars = "\\/?*[]";
             if (sheetName.find_first_of(invalidChars) != std::string::npos) {
                 std::cerr << "Invalid characters found in sheet name: " << sheetName << ", replacing with '_'" << std::endl;
                 for (const auto& c: invalidChars) {

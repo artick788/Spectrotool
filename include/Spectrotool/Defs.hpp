@@ -12,5 +12,6 @@ typedef enum ST_COMPOUND_TYPE {
 namespace Spectrotool {
 
     namespace fs = std::filesystem;
+    static std::string ST_REPLACEMENT_CHAR = "_";
 
 }

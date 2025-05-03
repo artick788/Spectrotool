@@ -19,7 +19,7 @@ namespace Spectrotool{
 
         template<typename... Args>
         void addTask(Args&&... args){
-            SR_PRECONDITION(m_IsRunning, "Worker: %s (%zu) is not running", m_Name.c_str(), this);
+            SR_PRECONDITION(m_IsRunning, "Worker: {} is not running", m_Name.c_str());
 
             {
                 std::lock_guard<std::mutex> lk(m_Mutex);
@@ -31,8 +31,8 @@ namespace Spectrotool{
 
         template<typename... Args>
         void addTaskSync(Args&&... args){
-            SR_PRECONDITION(m_IsRunning, "Worker: %s (%zu) is not running", m_Name.c_str(), this);
-            SR_PRECONDITION(m_Thread.get_id() != std::this_thread::get_id(), "Cannot push synchronized task from worker thread to itself (Thread: %zu)", m_Thread.get_id());
+            SR_PRECONDITION(m_IsRunning, "Worker: {} is not running", m_Name.c_str());
+            SR_PRECONDITION(m_Thread.get_id() != std::this_thread::get_id(), "Cannot push synchronized task from worker thread to itself (Thread: {})", m_Thread.get_id());
 
             bool finished = false;
 

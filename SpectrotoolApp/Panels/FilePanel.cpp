@@ -38,10 +38,11 @@ namespace Spectrotool {
         static float windowWidth = 500.0f;
         static float windowHeight = 300.0f;
         ImGui::SetNextWindowSize({windowWidth, windowHeight});
-        ImGui::Begin("Load new VMM readings", nullptr, ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin("Load new readings", nullptr, ImGuiWindowFlags_NoCollapse);
 
         static std::string massSpecFile;
         static std::string sampleListFile;
+        static std::string correctionFactorFile;
         if (ImGui::Button("Load Mass Spec file", {200.0f, 20.0f})) {
            massSpecFile = m_Window->openFileDialog(".xlsx");
         }
@@ -52,6 +53,31 @@ namespace Spectrotool {
         }
         ImGui::SameLine();
         ImGui::Text("%s", sampleListFile.c_str());
+
+        if (ImGui::Button("Load Correction Factor file", {200.0f, 20.0f})) {
+            correctionFactorFile = m_Window->openFileDialog(".xlsx");
+        }
+        ImGui::SameLine();
+        ImGui::Text("%s", correctionFactorFile.c_str());
+
+        static std::vector<std::string> correctionFactorMethods = {"VMM", "Wellington", "EPA"};
+        static int selectedMethod = -1;
+        if (ImGui::BeginCombo("Correction Method",
+                              (selectedMethod >= 0 && selectedMethod < correctionFactorMethods.size())
+                              ? correctionFactorMethods[selectedMethod].c_str()
+                              : "Select...")) {
+            for (int i = 0; i < correctionFactorMethods.size(); ++i) {
+                bool isSelected = (selectedMethod == i);
+                if (ImGui::Selectable(correctionFactorMethods[i].c_str(), isSelected)) {
+                    selectedMethod = i;
+                }
+
+                // Set the initial focus when opening the combo (optional)
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
 
         ImGui::Separator();
         ImGui::Text("Exclude compounds containing: ");

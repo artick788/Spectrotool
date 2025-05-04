@@ -8,6 +8,7 @@ namespace Spectrotool{
     struct ProjectDesc{
         MassSpecFileDesc massSpecFileDesc;
         SampleListFileDesc sampleListFileDesc;
+        CorrectionFactorDesc correctionFactorDesc;
     };
 
     class Project{

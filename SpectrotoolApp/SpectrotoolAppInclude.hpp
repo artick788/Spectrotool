@@ -3,6 +3,7 @@
 #include <SyriusCore/SyriusCore.hpp>
 #include <Spectrotool/MassSpecFile.hpp>
 #include <Spectrotool/SampleListFile.hpp>
+#include <Spectrotool/CorrectionFactor.hpp>
 #include <functional>
 
 namespace Spectrotool {

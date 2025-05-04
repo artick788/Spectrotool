@@ -4,12 +4,12 @@
 
 namespace Spectrotool{
 
-    CorrectionFactor::CorrectionFactor(const fs::path& filePath){
-        if (!fs::exists(filePath)) {
-            throw std::runtime_error("File does not exist: " + filePath.string());
+    CorrectionFactor::CorrectionFactor(const CorrectionFactorDesc& desc){
+        if (!fs::exists(desc.filePath)) {
+            throw std::runtime_error("File does not exist: " + desc.filePath.string());
         }
         OpenXLSX::XLDocument doc;
-        doc.open(filePath.string());
+        doc.open(desc.filePath.string());
         const std::string firstSheetName = doc.workbook().sheetNames().front();
         const OpenXLSX::XLWorksheet& sheet = doc.workbook().worksheet(firstSheetName);
         loadWorkSheet(sheet);

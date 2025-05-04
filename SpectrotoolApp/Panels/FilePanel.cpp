@@ -84,14 +84,16 @@ namespace Spectrotool {
         ImGui::InputTextWithHint("##excludeFilter", "Filter", &m_ProjectDesc.massSpecFileDesc.excludeFilter);
 
         ImGui::NewLine();
-        if (fs::exists(massSpecFile) && fs::exists(sampleListFile)) {
+        if (fs::exists(massSpecFile) && fs::exists(sampleListFile) && fs::exists(correctionFactorFile)) {
             if (ImGui::Button("Load", {96.0f, 20.0f})) {
                 m_ProjectDesc.massSpecFileDesc.filePath = massSpecFile;
                 m_ProjectDesc.sampleListFileDesc.filePath = sampleListFile;
+                m_ProjectDesc.correctionFactorDesc.filePath = correctionFactorFile;
                 m_Store->loadProject(m_ProjectDesc);
                 m_OpenFileSelector = false;
                 massSpecFile.clear();
                 sampleListFile.clear();
+                correctionFactorFile.clear();
                 m_ProjectDesc.massSpecFileDesc.excludeFilter.clear();
 
             }

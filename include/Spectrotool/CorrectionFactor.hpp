@@ -15,9 +15,13 @@ namespace Spectrotool {
         double quantityISTD = 0.0;
     };
 
+    struct CorrectionFactorDesc {
+        fs::path filePath;
+    };
+
     class CorrectionFactor{
     public:
-        explicit CorrectionFactor(const fs::path& filePath);
+        explicit CorrectionFactor(const CorrectionFactorDesc& desc);
 
         ~CorrectionFactor() = default;
 

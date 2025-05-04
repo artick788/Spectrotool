@@ -17,9 +17,10 @@ protected:
 };
 
 TEST_F(TestCorrectionFactor, HappyDayParse) {
-    const fs::path filePath = fs::current_path() / "TestResources" / "HappyDay" / "Correction_factors_TG.xlsx";
+    CorrectionFactorDesc desc;
+    desc.filePath = fs::current_path() / "TestResources" / "HappyDay" / "Correction_factors_TG.xlsx";
 
-    CorrectionFactor factor(filePath);
+    CorrectionFactor factor(desc);
     const auto& factors = factor.getCorrectionValues();
     ASSERT_EQ(factors.size(), 15);
 

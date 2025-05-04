@@ -21,6 +21,10 @@ namespace Spectrotool {
 
         ~CorrectionFactor() = default;
 
+        const std::unordered_map<std::string, CorrectionValue>& getCorrectionValues() const { return m_CorrectionValues;}
+
+        const CorrectionValue& getCorrectionValue(const std::string& name) const;
+
     private:
         void loadWorkSheet(const OpenXLSX::XLWorksheet& sheet);
 

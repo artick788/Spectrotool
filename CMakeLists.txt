@@ -64,7 +64,8 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
             test/TestMassSpecFile.cpp
             test/TestMassSpecFile.hpp
             test/TestSampleListFile.cpp
-            test/TestSampleListFile.hpp)
+            test/TestSampleListFile.hpp
+            test/TestCorrectionFactor.cpp)
     add_dependencies(SpectrotoolTest gtest)
 
     target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX)

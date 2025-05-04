@@ -1,6 +1,6 @@
 #include "utils.hpp"
 
-#include <Spectrotool/Defs.hpp>
+#include "../include/Spectrotool/Defs.hpp"
 
 namespace Spectrotool {
 

@@ -16,7 +16,7 @@ TEST_F(TestMassSpecFile, HappyDayParse) {
     EXPECT_EQ(worksheet.getSampleCount(), 6382);
 
     // grab compound Me PFBSA
-    auto c1 = worksheet.getCompound("Me PFBSA");
+    auto c1 = worksheet.getCompound("Me_PFBSA");
     EXPECT_EQ(c1.size(), 1); // should only be one compound with this name
 
     // grab compound m-PFTeDA

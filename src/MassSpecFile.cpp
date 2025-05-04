@@ -58,6 +58,17 @@ namespace Spectrotool{
         }
     }
 
+    void MassSpecFile::correct(const CorrectionFactor &factor) {
+        for (Compound& compound: m_Compounds) {
+            if (!factor.hasCorrectionValue(compound.getName())) {
+                // Invalid Input!
+                throw std::runtime_error("Compound: " + compound.getName() + " does not have a correction factor!");
+            }
+            const CorrectionValue& correction = factor.getCorrectionValue(compound.getName());
+            compound.correct(correction);
+        }
+    }
+
     nlohmann::json MassSpecFile::toJson() const {
         nlohmann::json json;
         for (const auto& compound: m_Compounds) {
@@ -102,8 +113,14 @@ namespace Spectrotool{
                 setXLValue(sheet, "D" + std::to_string(row), compoundValue.area);
                 setXLValue(sheet, "E" + std::to_string(row), compoundValue.isArea);
                 setXLValue(sheet, "F" + std::to_string(row), compoundValue.sDivN);
+
                 setXLValue(sheet, "G" + std::to_string(row), compoundValue.weight);
                 setXLValue(sheet, "H" + std::to_string(row), compoundValue.matrix);
+
+                setXLValue(sheet, "I" + std::to_string(row), compoundValue.correctedISArea);
+                setXLValue(sheet, "J" + std::to_string(row), compoundValue.uncorrectedConcentration_pgg);
+                setXLValue(sheet, "K" + std::to_string(row), compoundValue.uncorrectedConcentration_microgkg);
+                setXLValue(sheet, "L" + std::to_string(row), compoundValue.correctedConcentration);
                 row++;
             }
         }

@@ -17,8 +17,14 @@ namespace Spectrotool {
         json["area"] = area;
         json["isArea"] = isArea;
         json["sDivN"] = sDivN;
+
         json["weight"] = weight;
         json["matrix"] = matrix;
+
+        json["correctedISArea"] = correctedISArea;
+        json["uncorrectedConcentration_pgg"] = uncorrectedConcentration_pgg;
+        json["uncorrectedConcentration_microgkg"] = uncorrectedConcentration_microgkg;
+        json["correctedConcentration"] = correctedConcentration;
         return json;
     }
 
@@ -29,8 +35,14 @@ namespace Spectrotool {
         area = json["area"].get<double>();
         isArea = json["isArea"].get<double>();
         sDivN = json["sDivN"].get<double>();
+
         weight = json["weight"].get<double>();
         matrix = json["matrix"].get<std::string>();
+
+        correctedISArea = json["correctedISArea"].get<double>();
+        uncorrectedConcentration_pgg = json["uncorrectedConcentration_pgg"].get<double>();
+        uncorrectedConcentration_microgkg = json["uncorrectedConcentration_microgkg"].get<double>();
+        correctedConcentration = json["correctedConcentration"].get<double>();
     }
 
     Compound::Compound(std::string name):
@@ -46,7 +58,6 @@ namespace Spectrotool {
         }
         m_Values.push_back(value);
     }
-
 
     std::string Compound::str() const {
         std::string result = m_Name + ":\n";
@@ -66,9 +77,15 @@ namespace Spectrotool {
         }
     }
 
+    void Compound::correct(const CorrectionValue &correctionValue) {
+        istdCorrection(correctionValue);
+        concentrationCorrection(correctionValue);
+    }
+
     nlohmann::json Compound::toJson() const {
         nlohmann::json json;
         json["name"] = m_Name;
+        json["blankCorrection"] = m_BlankCorrection;
         nlohmann::json values;
         for (const auto& value: m_Values) {
             values.push_back(value.toJson());
@@ -79,10 +96,47 @@ namespace Spectrotool {
 
     void Compound::fromJson(const nlohmann::json &json) {
         m_Name = json["name"].get<std::string>();
+        m_BlankCorrection = json["blankCorrection"].get<double>();
         for (const auto& valueJson: json["values"]) {
             m_Values.emplace_back();
             m_Values.back().fromJson(valueJson);
         }
     }
+
+    void Compound::istdCorrection(const CorrectionValue &correctionValue) {
+        for (CompoundValue& value: m_Values) {
+            value.correctedISArea = value.isArea * correctionValue.correctionFactor;
+        }
+    }
+
+    void Compound::concentrationCorrection(const CorrectionValue &correctionValue) {
+        // 1. Uncorrected Concentration
+        for (CompoundValue& value: m_Values) {
+            const double area = value.area / value.correctedISArea;
+            const double weight = (correctionValue.quantityISTD * 1000) / value.weight;
+            value.uncorrectedConcentration_pgg = area * weight;
+            value.uncorrectedConcentration_microgkg = value.uncorrectedConcentration_pgg * 1000;
+        }
+
+        // 2. Blank Calculation
+        std::size_t BL_count = 0;
+        double accValue = 0.0;
+        for (CompoundValue& value: m_Values) {
+            if (value.id.find("BL") != std::string::npos) {
+                accValue += value.uncorrectedConcentration_microgkg;
+                BL_count++;
+            }
+        }
+        if (BL_count > 0) {
+            m_BlankCorrection = accValue / static_cast<double>(BL_count);
+        }
+
+        // 3. Corrected Concentration
+        for (CompoundValue& value: m_Values) {
+            value.correctedConcentration = value.uncorrectedConcentration_microgkg - m_BlankCorrection;
+        }
+    }
+
+
 
 }

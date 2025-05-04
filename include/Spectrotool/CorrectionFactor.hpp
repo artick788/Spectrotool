@@ -29,6 +29,10 @@ namespace Spectrotool {
 
         const CorrectionValue& getCorrectionValue(const std::string& name) const;
 
+        bool hasCorrectionValue(const std::string& name) const {
+            return m_CorrectionValues.find(name) != m_CorrectionValues.end();
+        }
+
     private:
         void loadWorkSheet(const OpenXLSX::XLWorksheet& sheet);
 

@@ -23,6 +23,7 @@ namespace Spectrotool{
 
         // do correction
         const CorrectionFactor factor(desc.correctionFactorDesc);
+        m_MassSpecFile->correct(factor);
     }
 
     void Project::exportJson(const fs::path &path) const {

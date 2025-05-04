@@ -4,6 +4,7 @@
 #include "Compound.hpp"
 #include <OpenXLSX.hpp>
 #include <unordered_set>
+#include "CorrectionFactor.hpp"
 
 namespace Spectrotool{
 
@@ -36,6 +37,8 @@ namespace Spectrotool{
         std::vector<Compound*> getCompound(const std::string& name);
 
         void setSampleInfo(const SampleListFile& sampleListFile);
+
+        void correct(const CorrectionFactor& factor);
 
         nlohmann::json toJson() const;
 

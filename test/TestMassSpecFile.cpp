@@ -75,5 +75,21 @@ TEST_F(TestMassSpecFile, SmallHappyDayExport) {
     MassSpecFileExportDesc exportDesc;
     exportDesc.filePath = fs::current_path() / "TestResources" / "HappyDaySmall" / "220115_PFASFORWARD_VMM_export.xlsx";
     worksheet.exportToExcel(exportDesc);
+}
 
+TEST_F(TestMassSpecFile, ReplacementRules) {
+    MassSpecFileDesc desc;
+    desc.sheetNames = {"Polar"};
+    desc.filePath = fs::current_path() / "TestResources" / "ReplacementRules.xlsx";
+    MassSpecFile worksheet(desc);
+
+    EXPECT_FALSE(worksheet.hasCompound("Me-PFBSA:"));
+    ASSERT_TRUE(worksheet.hasCompound("Me-PFBSA_"));
+
+    const auto pfbsa = worksheet.getCompound("Me-PFBSA_");
+    ASSERT_EQ(pfbsa.size(), 1);
+    const Compound c1 = *pfbsa[0];
+    const CompoundValue& v1 = c1.getValues()[0];
+    EXPECT_EQ(v1.name, "250115-VMM-Frouk__e-003");
+    EXPECT_EQ(v1.id, "BL1_Soil");
 }

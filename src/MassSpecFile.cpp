@@ -2,24 +2,19 @@
 
 #include <filesystem>
 
+#include "utils.hpp"
+
 namespace Spectrotool{
 
     void addCompound(Compound &compound, const OpenXLSX::XLCell &row) {
         CompoundValue value;
-        value.name = row.offset(0, 2).value().getString();
-        value.id = row.offset(0, 3).value().getString();
-        if (const std::string rt = row.offset(0, 4).value().getString(); !rt.empty()) {
-            value.rt = std::stod(rt);
-        }
-        if (const std::string area = row.offset(0, 5).value().getString(); !area.empty()) {
-            value.area = std::stod(area);
-        }
-        if (const std::string isArea = row.offset(0, 6).value().getString(); !isArea.empty()) {
-            value.isArea = std::stod(isArea);
-        }
-        if (const std::string sDivN = row.offset(0, 7).value().getString(); !sDivN.empty()) {
-            value.sDivN = std::stod(sDivN);
-        }
+        value.name = getXLValue<std::string>(row.offset(0, 2));
+        value.id = getXLValue<std::string>(row.offset(0, 3));
+        value.rt = getXLValue<double>(row.offset(0, 4));
+        value.area = getXLValue<double>(row.offset(0, 5));
+        value.isArea = getXLValue<double>(row.offset(0, 6));
+        value.sDivN = getXLValue<double>(row.offset(0, 7));
+
         compound.addValue(std::move(value));
     }
 
@@ -88,13 +83,7 @@ namespace Spectrotool{
         std::unordered_map<std::string, unsigned int> duplicateSheets;
         for (const auto& compound: m_Compounds) {
             std::string sheetName = compound.getName();
-            static const std::string invalidChars = "\\/?*[]";
-            if (sheetName.find_first_of(invalidChars) != std::string::npos) {
-                std::cerr << "Invalid characters found in sheet name: " << sheetName << ", replacing with '_'" << std::endl;
-                for (const auto& c: invalidChars) {
-                    std::replace(sheetName.begin(), sheetName.end(), c, '_');
-                }
-            }
+            sanitizeString(sheetName);
             if (wb.worksheetExists(sheetName)) {
                 duplicateSheets[sheetName]++;
                 sheetName += "_" + std::to_string(duplicateSheets[sheetName]);
@@ -107,14 +96,14 @@ namespace Spectrotool{
 
             std::size_t row = 2;
             for (const auto& compoundValue: compound.getValues()) {
-                sheet.cell("A" + std::to_string(row)).value() = compoundValue.name;
-                sheet.cell("B" + std::to_string(row)).value() = compoundValue.id;
-                sheet.cell("C" + std::to_string(row)).value() = compoundValue.rt;
-                sheet.cell("D" + std::to_string(row)).value() = compoundValue.area;
-                sheet.cell("E" + std::to_string(row)).value() = compoundValue.isArea;
-                sheet.cell("F" + std::to_string(row)).value() = compoundValue.sDivN;
-                sheet.cell("G" + std::to_string(row)).value() = compoundValue.weight;
-                sheet.cell("H" + std::to_string(row)).value() = compoundValue.matrix;
+                setXLValue(sheet, "A" + std::to_string(row), compoundValue.name);
+                setXLValue(sheet, "B" + std::to_string(row), compoundValue.id);
+                setXLValue(sheet, "C" + std::to_string(row), compoundValue.rt);
+                setXLValue(sheet, "D" + std::to_string(row), compoundValue.area);
+                setXLValue(sheet, "E" + std::to_string(row), compoundValue.isArea);
+                setXLValue(sheet, "F" + std::to_string(row), compoundValue.sDivN);
+                setXLValue(sheet, "G" + std::to_string(row), compoundValue.weight);
+                setXLValue(sheet, "H" + std::to_string(row), compoundValue.matrix);
                 row++;
             }
         }
@@ -132,7 +121,8 @@ namespace Spectrotool{
             // If the cell is a string, check if it contains the compound name
             if (row.value().type() == OpenXLSX::XLValueType::String) {
                 // Create a new compound and format the name
-                if (std::string value = row.value(); value.find(compoundName) != std::string::npos) {
+                std::string value = row.value();
+                if (value.find(compoundName) != std::string::npos) {
                     if (m_CompoundNames.find(value) != m_CompoundNames.end()) {
                         throw std::runtime_error("Duplicate compound name: " + value);
                     }
@@ -174,6 +164,8 @@ namespace Spectrotool{
         if (std::size_t start_str = extracted.find_first_not_of(' '); start_str != std::string::npos) {
             extracted.erase(0, start_str);
         }
+        // finally sanitize the string
+        sanitizeString(extracted);
         return extracted;
     }
     

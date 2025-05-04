@@ -13,16 +13,18 @@ set(SPECTROTOOL_HEADERS
     include/Spectrotool/Compound.hpp
     include/Spectrotool/Defs.hpp
     include/Spectrotool/MassSpecFile.hpp
-        include/Spectrotool/SampleListFile.hpp
+    include/Spectrotool/SampleListFile.hpp
     include/Spectrotool/CorrectionFactor.hpp
 )
 
 set(SPECTROTOOL_SRC
-        include/Spectrotool/json.hpp
+    include/Spectrotool/json.hpp
     src/Compound.cpp
     src/MassSpecFile.cpp
-        src/SampleListFile.cpp
+    src/SampleListFile.cpp
     src/CorrectionFactor.cpp
+    src/utils.cpp
+    src/utils.hpp
 )
 
 add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})

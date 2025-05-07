@@ -93,3 +93,9 @@ TEST_F(TestMassSpecFile, ReplacementRules) {
     EXPECT_EQ(v1.name, "250115-VMM-Frouk__e-003");
     EXPECT_EQ(v1.id, "BL1_Soil");
 }
+
+TEST_F(TestMassSpecFile, CorrectionFactorParse) {
+    MassSpecFileDesc desc;
+    desc.filePath = fs::current_path() / "TestResources" / "CorrectionFactor/Spectrotool_Verifier_Input.xlsx";
+    EXPECT_NO_THROW(MassSpecFile worksheet(desc));
+}

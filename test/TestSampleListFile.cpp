@@ -24,5 +24,10 @@ TEST_F(TestSampleListFile, HappyDayParse) {
     EXPECT_EQ(sample.id, "BL1_Soil");
     EXPECT_NEAR(sample.weight, 7.82f, 0.01);
     EXPECT_EQ(sample.matrix, "Soil");
+}
 
+TEST_F(TestSampleListFile, CorrectionFactorParse) {
+    SampleListFileDesc desc;
+    desc.filePath = fs::current_path() / "TestResources" / "CorrectionFactor" / "Spectrotool_Verifier_SampleList.xlsx";
+    EXPECT_NO_THROW(SampleListFile f(desc));
 }

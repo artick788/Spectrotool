@@ -6,6 +6,7 @@ include(cmake/CMakeLibs.cmake)
 
 fetch_openxlsx()
 fetch_syriuscore()
+fetch_syriusutils()
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 
@@ -15,6 +16,9 @@ set(SPECTROTOOL_HEADERS
     include/Spectrotool/MassSpecFile.hpp
     include/Spectrotool/SampleListFile.hpp
     include/Spectrotool/CorrectionFactor.hpp
+        include/Spectrotool/DataTable.hpp
+        include/Spectrotool/Parsers/DataTableParser.hpp
+        include/Spectrotool/Parsers/ParserMessages.hpp
 )
 
 set(SPECTROTOOL_SRC
@@ -25,11 +29,13 @@ set(SPECTROTOOL_SRC
     src/CorrectionFactor.cpp
     src/utils.cpp
     src/utils.hpp
+        src/DataTable.cpp
+        src/Parsers/DataTableParser.cpp
 )
 
 add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})
 target_include_directories(Spectrotool PUBLIC include)
-target_link_libraries(Spectrotool OpenXLSX)
+target_link_libraries(Spectrotool OpenXLSX SyriusUtils)
 
 set(SPECTROTOOL_APP_SRC
     SpectrotoolApp/SpectrotoolApp.cpp
@@ -65,10 +71,12 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
             test/TestMassSpecFile.hpp
             test/TestSampleListFile.cpp
             test/TestSampleListFile.hpp
-            test/TestCorrectionFactor.cpp)
+            test/TestCorrectionFactor.cpp
+            test/TestDataTable.cpp
+            test/TestDataTableParser.cpp)
     add_dependencies(SpectrotoolTest gtest)
 
-    target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX)
+    target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX SyriusUtils)
 
     add_test(NAME CTestSpectrotool COMMAND ${PROOT} $<TARGET_FILE:SpectrotoolTest>)
     set_tests_properties(CTestSpectrotool PROPERTIES

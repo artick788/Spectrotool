@@ -6,7 +6,7 @@
 
 namespace Spectrotool{
 
-    void addCompound(Compound &compound, const OpenXLSX::XLCell &row) {
+    void addCompound1(Compound &compound, const OpenXLSX::XLCell &row) {
         CompoundValue value;
         value.name = getXLValue<std::string>(row.offset(0, 2));
         value.id = getXLValue<std::string>(row.offset(0, 3));
@@ -157,7 +157,7 @@ namespace Spectrotool{
                 if (currentCompound == nullptr) {
                     continue;
                 }
-                addCompound(*currentCompound, row);
+                addCompound1(*currentCompound, row);
                 m_SampleCount++;
             }
         }

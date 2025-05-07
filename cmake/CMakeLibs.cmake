@@ -1,33 +1,14 @@
 include(FetchContent)
+include(SyriusBuildUtils/CMakeUtils.cmake)
 
 function(fetch_openxlsx)
-    if (NOT TARGET OpenXLSX)
-        message(STATUS "Fetching openxlsx")
-        FetchContent_Declare(
-                OpenXLSX
-                GIT_REPOSITORY https://github.com/troldal/OpenXLSX.git
-                GIT_TAG master
-                GIT_PROGRESS TRUE # Show progress
-                GIT_SHALLOW TRUE # Only fetch the latest commit
-        )
-        FetchContent_MakeAvailable(OpenXLSX)
-    else()
-        message(WARNING "No target openxlsx found!")
-    endif()
+    fetch_lib(OpenXLSX https://github.com/troldal/OpenXLSX.git master)
 endfunction()
 
 function(fetch_syriuscore)
-    if (NOT TARGET SyriusCore)
-        message(STATUS "Fetching openxlsx")
-        FetchContent_Declare(
-                SyriusCore
-                GIT_REPOSITORY https://github.com/SyriusEngine/SyriusCore.git
-                GIT_TAG main
-                GIT_PROGRESS TRUE # Show progress
-                GIT_SHALLOW TRUE # Only fetch the latest commit
-        )
-        FetchContent_MakeAvailable(SyriusCore)
-    else()
-        message(WARNING "No target SyriusCore found!")
-    endif()
+    fetch_lib(SyriusCore https://github.com/SyriusEngine/SyriusCore.git main)
+endfunction()
+
+function(fetch_syriusutils)
+    fetch_lib(SyriusUtils https://github.com/SyriusEngine/SyriusUtils.git main)
 endfunction()

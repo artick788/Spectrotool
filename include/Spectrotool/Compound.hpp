@@ -57,6 +57,10 @@ namespace Spectrotool {
 
         void fromJson(const nlohmann::json& json);
 
+        auto begin(){ return m_Values.begin(); }
+
+        auto end() { return m_Values.end(); }
+
     private:
 
         void istdCorrection(const CorrectionValue& correctionValue);

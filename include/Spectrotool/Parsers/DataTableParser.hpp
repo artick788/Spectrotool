@@ -12,4 +12,6 @@ namespace Spectrotool {
 
     ParserMessages parseDataTable(const DataTableDesc& desc, DataTable& table);
 
+    void exportDataTable(const fs::path& filePath);
+
 }

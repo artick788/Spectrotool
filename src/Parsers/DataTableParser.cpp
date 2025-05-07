@@ -98,4 +98,8 @@ namespace Spectrotool {
         return msgs;
     }
 
+    void exportDataTable(const fs::path& filePath) {
+
+    }
+
 }

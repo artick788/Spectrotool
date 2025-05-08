@@ -37,9 +37,8 @@ namespace Spectrotool {
         return compoundName;
     }
 
-    void parseWorkSheet(const OpenXLSX::XLWorksheet& sheet, const DataTableDesc& desc, DataTable& table, ParserMessages& msgs) {
+    void parseWorkSheet(const OpenXLSX::XLWorksheet& sheet, const DataTableDesc& desc, DataTable& table, ParserMessages& msgs, std::unordered_set<std::string>& compoundNames) {
         Compound* current = nullptr;
-        std::unordered_set<std::string> compoundNames;
 
         // Specify a quadratic region that is 1 column wide and as long as the sheet
         const auto range = sheet.range(OpenXLSX::XLCellReference("A1"), OpenXLSX::XLCellReference(sheet.rowCount(), 1));
@@ -54,7 +53,10 @@ namespace Spectrotool {
                         current = nullptr;
                         continue;
                     }
-                    if (compoundNames.find(formattedName) != compoundNames.end()) {
+                    if (compoundNames.find(formattedName) == compoundNames.end()) {
+                        compoundNames.insert(formattedName);
+                    }
+                    else {
                         msgs.addWarning("Duplicate compound: " + formattedName, row.cellReference().address(), sheet.name());
                     }
                     Compound c(formattedName);
@@ -81,6 +83,8 @@ namespace Spectrotool {
         }
         OpenXLSX::XLDocument document;
         document.open(desc.filePath.string());
+
+        std::unordered_set<std::string> compoundNames;
         for (const auto& sheetName: document.workbook().sheetNames()) {
             const OpenXLSX::XLWorksheet& sheet = document.workbook().worksheet(sheetName);
             if (sheet.rowCount() == 0 || sheet.columnCount() == 0) {
@@ -88,7 +92,7 @@ namespace Spectrotool {
             }
             else {
                 try {
-                    parseWorkSheet(sheet, desc, table, msgs);
+                    parseWorkSheet(sheet, desc, table, msgs, compoundNames);
                 } catch (std::exception& e) {
                     msgs.addError("Invalid Parse!", "UNKNOWN", sheetName);
                 }
@@ -98,7 +102,68 @@ namespace Spectrotool {
         return msgs;
     }
 
-    void exportDataTable(const fs::path& filePath) {
+    void formatHeader(const OpenXLSX::XLWorksheet &sheet){
+        sheet.cell("A1").value() = "Name";
+        sheet.cell("B1").value() = "ID";
+        sheet.cell("C1").value() = "RT";
+        sheet.cell("D1").value() = "Area";
+        sheet.cell("E1").value() = "IS Area";
+        sheet.cell("F1").value() = "S/N";
+
+        sheet.cell("G1").value() = "Weight";
+        sheet.cell("H1").value() = "Matrix";
+
+        sheet.cell("I1").value() = "CorrectedISArea";
+        sheet.cell("J1").value() = "uncorrectedConcentration (pg/g)";
+        sheet.cell("K1").value() = "uncorrectedConcentration (ug/kg)";
+        sheet.cell("L1").value() = "correctedConcentration";
+    }
+
+    void exportCompound(const Compound& compound, OpenXLSX::XLWorksheet &sheet) {
+        std::size_t row = 2;
+        for (const auto& compoundValue: compound.getValues()) {
+            setXLValue(sheet, "A" + std::to_string(row), compoundValue.name);
+            setXLValue(sheet, "B" + std::to_string(row), compoundValue.id);
+            setXLValue(sheet, "C" + std::to_string(row), compoundValue.rt);
+            setXLValue(sheet, "D" + std::to_string(row), compoundValue.area);
+            setXLValue(sheet, "E" + std::to_string(row), compoundValue.isArea);
+            setXLValue(sheet, "F" + std::to_string(row), compoundValue.sDivN);
+
+            setXLValue(sheet, "G" + std::to_string(row), compoundValue.weight);
+            setXLValue(sheet, "H" + std::to_string(row), compoundValue.matrix);
+
+            setXLValue(sheet, "I" + std::to_string(row), compoundValue.correctedISArea);
+            setXLValue(sheet, "J" + std::to_string(row), compoundValue.uncorrectedConcentration_pgg);
+            setXLValue(sheet, "K" + std::to_string(row), compoundValue.uncorrectedConcentration_microgkg);
+            setXLValue(sheet, "L" + std::to_string(row), compoundValue.correctedConcentration);
+            row++;
+        }
+    }
+
+    void exportDataTable(const DataTable& table, const fs::path& filePath) {
+        OpenXLSX::XLDocument doc;
+        doc.create(filePath.string(), OpenXLSX::XLForceOverwrite);
+        OpenXLSX::XLWorkbook wb = doc.workbook();
+        std::unordered_map<std::string, unsigned int> duplicateSheets;
+
+        const auto& compounds = table.getCompounds();
+        for (const Compound& compound: compounds) {
+            // Create worksheet and check if name is a duplicate
+            // Excel does not like duplicate sheet names
+            std::string sheetName = compound.getName();
+            if (wb.worksheetExists(sheetName)) {
+                duplicateSheets[sheetName]++;
+                sheetName += "_" + std::to_string(duplicateSheets[sheetName]);
+                std::cerr << "Duplicate sheet name found: " << compound.getName() << ", renaming to: " << sheetName << std::endl;
+            }
+            wb.addWorksheet(sheetName);
+            OpenXLSX::XLWorksheet sheet = wb.worksheet(sheetName);
+
+            // Add header
+            formatHeader(sheet);
+            // Add values
+            exportCompound(compound, sheet);
+        }
 
     }
 

@@ -1,13 +1,13 @@
-#include "ProjectPanel.hpp"
+#include "DataTablePanel.hpp"
 
 namespace Spectrotool{
 
-    ProjectPanel::ProjectPanel(UP<SyriusWindow> &window, ResourceView<Context> &context, UP<Store> &store) :
+    DataTablePanel::DataTablePanel(UP<SyriusWindow> &window, ResourceView<Context> &context, UP<Store> &store) :
     Panel(window, context, store) {
 
     }
 
-    void ProjectPanel::render(WindowSize &size) {
+    void DataTablePanel::render(WindowSize &size) {
         ImGui::SetNextWindowPos({size.x, size.y});
         ImGui::SetNextWindowSize({size.width, size.height});
         ImGui::Begin("Compounds", nullptr, ImGuiWindowFlags_NoTitleBar |
@@ -16,8 +16,8 @@ namespace Spectrotool{
         if (m_Store->isProjectLoading()) {
             ImGui::Text("Loading project...");
         }
-        else if (m_Store->getProject() != nullptr){
-            renderProject(m_Store->getProject());
+        else if (m_Store->getDataTable() != nullptr){
+            renderTable(m_Store->getDataTable());
         }
         else {
             ImGui::TextColored({1.0f, 0.0f, 0.0f, 1.0f}, "No project loaded! Please load some readings or open an existing project.");
@@ -26,8 +26,8 @@ namespace Spectrotool{
         ImGui::End();
     }
 
-    void ProjectPanel::renderProject(const UP<Project> &project){
-        const auto& compounds = project->getMassSpecFile()->getCompounds();
+    void DataTablePanel::renderTable(const UP<DataTable> &project){
+        const auto& compounds = project->getCompounds();
         if (ImGui::BeginTabBar("CompoundList")){
             for (const auto & compound : compounds){
                 if (ImGui::BeginTabItem(compound.getName().c_str())){
@@ -48,7 +48,7 @@ namespace Spectrotool{
 
     }
 
-    void ProjectPanel::renderCompound(const Compound &compound) {
+    void DataTablePanel::renderCompound(const Compound &compound) {
         ImGui::Columns(12, "CompoundColumns");
         ImGui::Separator();
         // First the header

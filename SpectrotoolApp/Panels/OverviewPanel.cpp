@@ -1,0 +1,112 @@
+#include "OverviewPanel.hpp"
+
+namespace Spectrotool {
+
+    OverviewPanel::OverviewPanel(UP<SyriusWindow> &window, ResourceView<Context> &context, UP<Store> &store):
+    Panel(window, context, store){
+
+    }
+
+    void OverviewPanel::render(WindowSize &size) {
+        renderPanelContent(size);
+        if (m_OpenFileSelector) {
+            renderFileSelector();
+        }
+    }
+
+    void OverviewPanel::renderPanelContent(WindowSize &size) {
+        ImGui::SetNextWindowPos({size.x, size.y});
+        ImGui::SetNextWindowSize({size.width, size.height});
+        ImGui::Begin("FilePanel", nullptr, ImGuiWindowFlags_NoTitleBar |
+                                             ImGuiWindowFlags_NoResize);
+
+        if (m_Store->getDataTable() != nullptr){
+            renderProjectOverview();
+        }
+        else {
+            ImGui::Text("Upload new readings"); ImGui::SameLine();
+            if (ImGui::Button("Open", {50.0f, 20.0f})) {
+                m_OpenFileSelector = true;
+            }
+        }
+
+        ImGui::End();
+    }
+
+    void OverviewPanel::renderFileSelector() {
+        static float windowWidth = 500.0f;
+        static float windowHeight = 300.0f;
+        ImGui::SetNextWindowSize({windowWidth, windowHeight});
+        ImGui::Begin("Load new data", nullptr, ImGuiWindowFlags_NoCollapse);
+
+        static std::string massSpecFile;
+        static std::vector<std::string> filters;
+        static std::size_t filterCount = 1;
+        auto reset = [&]() {
+            massSpecFile.clear();
+            filters.clear();
+            filterCount = 1;
+        };
+        if (ImGui::Button("Load Excel file", {200.0f, 20.0f})) {
+           massSpecFile = m_Window->openFileDialog(".xlsx");
+        }
+        ImGui::SameLine();
+        ImGui::Text("%s",   massSpecFile.c_str());
+
+        ImGui::Separator();
+        ImGui::Text("Exclude compounds whose name contains one of these filters: ");
+        for (size_t i = 0; i < filters.size(); ++i) {
+            constexpr size_t maxLength = 256;
+            ImGui::PushID(static_cast<int>(i));
+            // Ensure enough space in the string to avoid buffer overflow
+            if (filters[i].capacity() < maxLength)
+                filters[i].reserve(maxLength); // Optional: ensure capacity
+            if (filters[i].size() < maxLength)
+                filters[i].resize(maxLength, '\0'); // Expand to fixed size temporarily
+            if (ImGui::InputText("##item", filters[i].data(), maxLength)) {
+                // Remove trailing nulls after edit
+                filters[i] = std::string(filters[i].c_str());
+            }
+
+            ImGui::PopID();
+        }
+
+        if (ImGui::Button("Add Compound Filter")) {
+            filters.emplace_back(std::string("filter") + std::to_string(filterCount++)); // Add new string
+        }
+
+        ImGui::NewLine();
+        if (fs::exists(massSpecFile)) {
+            if (ImGui::Button("Load", {96.0f, 20.0f})) {
+                DataTableDesc desc;
+                desc.filePath = massSpecFile;
+                desc.excludeCompoundFilter = filters;
+                m_Store->loadProject(desc);
+                m_OpenFileSelector = false;
+                reset();
+            }
+            ImGui::SameLine();
+        }
+        if (ImGui::Button("Close", {96.0f, 20.0f})) {
+            m_OpenFileSelector = false;
+            reset();
+        }
+        const auto sizes = ImGui::GetWindowSize();
+        windowWidth = sizes.x;
+        windowHeight = sizes.y;
+        ImGui::End();
+    }
+
+    void OverviewPanel::renderProjectOverview() const {
+        if (m_Store->isProjectLoading()){
+            ImGui::Text("Loading project...");
+            return;
+        }
+        ImGui::Text("%d Compounds", m_Store->getDataTable()->getCompounds().size());
+        ImGui::Text("%d Samples", m_Store->getDataTable()->getSampleCount());
+    }
+
+
+
+
+}

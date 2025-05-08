@@ -2,7 +2,6 @@
 
 #include "SpectrotoolAppInclude.hpp"
 #include "Worker.hpp"
-#include "Project.hpp"
 
 namespace Spectrotool {
 
@@ -16,17 +15,17 @@ namespace Spectrotool {
 
         void renderErrorMsg();
 
-        void loadProject(const ProjectDesc& desc);
+        void loadProject(const DataTableDesc& desc);
 
         void loadProjectStproj(const fs::path& stprojPath);
 
-        void exportJson(const fs::path& path) const;
+        void exportJson(const fs::path& filePath) const;
 
-        void exportExcel(const MassSpecFileExportDesc& desc);
+        void exportExcel(const fs::path& filePath);
 
         bool isProjectLoading() const;
 
-        const UP<Project>& getProject() const;
+        const UP<DataTable>& getDataTable() const;
 
     private:
 
@@ -38,14 +37,14 @@ namespace Spectrotool {
                     std::invoke(args...);
                 } catch (std::exception& e) {
                     setErrorMsg(e.what());
-                    m_Project = nullptr;
+                    m_Table = nullptr;
                 }
                 m_IsProjectLoading = false;
             });
         }
 
     private:
-        UP<Project> m_Project = nullptr;
+        UP<DataTable> m_Table = nullptr;
         std::string m_ErrorMsg;
         Worker m_Worker;
 

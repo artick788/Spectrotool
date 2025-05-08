@@ -47,14 +47,12 @@ set(SPECTROTOOL_APP_SRC
     SpectrotoolApp/Store.hpp
     SpectrotoolApp/Panels/MenuPanel.cpp
     SpectrotoolApp/Panels/MenuPanel.hpp
-    SpectrotoolApp/Panels/FilePanel.cpp
-    SpectrotoolApp/Panels/FilePanel.hpp
+        SpectrotoolApp/Panels/OverviewPanel.cpp
+        SpectrotoolApp/Panels/OverviewPanel.hpp
     SpectrotoolApp/Worker.cpp
     SpectrotoolApp/Worker.hpp
-    SpectrotoolApp/Project.cpp
-    SpectrotoolApp/Project.hpp
-    SpectrotoolApp/Panels/ProjectPanel.cpp
-    SpectrotoolApp/Panels/ProjectPanel.hpp)
+        SpectrotoolApp/Panels/DataTablePanel.cpp
+        SpectrotoolApp/Panels/DataTablePanel.hpp)
 
 add_executable(SpectrotoolApp main.cpp ${SPECTROTOOL_APP_SRC})
 target_link_libraries(SpectrotoolApp Spectrotool SyriusCore)

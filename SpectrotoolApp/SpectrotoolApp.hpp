@@ -2,9 +2,9 @@
 
 #include "SpectrotoolAppInclude.hpp"
 #include "Store.hpp"
-#include "Panels/FilePanel.hpp"
+#include "Panels/OverviewPanel.hpp"
 #include "Panels/MenuPanel.hpp"
-#include "Panels/ProjectPanel.hpp"
+#include "Panels/DataTablePanel.hpp"
 
 namespace Spectrotool {
 
@@ -28,8 +28,8 @@ namespace Spectrotool {
         UP<Store> m_Store;
 
         UP<MenuPanel> m_MenuPanel;
-        UP<FilePanel> m_FilePanel;
-        UP<ProjectPanel> m_ProjectPanel;
+        UP<OverviewPanel> m_FilePanel;
+        UP<DataTablePanel> m_ProjectPanel;
     };
 
 }

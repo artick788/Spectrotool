@@ -18,8 +18,8 @@ namespace Spectrotool {
 
         m_Store = createUP<Store>();
         m_MenuPanel = createUP<MenuPanel>(m_Window, m_Context, m_Store);
-        m_FilePanel = createUP<FilePanel>(m_Window, m_Context, m_Store);
-        m_ProjectPanel = createUP<ProjectPanel>(m_Window, m_Context, m_Store);
+        m_FilePanel = createUP<OverviewPanel>(m_Window, m_Context, m_Store);
+        m_ProjectPanel = createUP<DataTablePanel>(m_Window, m_Context, m_Store);
     }
 
     void SpectrotoolApp::run() {

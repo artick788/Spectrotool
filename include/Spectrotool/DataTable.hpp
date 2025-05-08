@@ -13,6 +13,8 @@ namespace Spectrotool {
 
         std::vector<Compound>& getCompounds() { return m_Compounds; }
 
+        const std::vector<Compound>& getCompounds() const { return m_Compounds; }
+
         std::size_t getSampleCount() const;
 
         bool hasCompound(const std::string& name) const;
@@ -26,7 +28,6 @@ namespace Spectrotool {
         void fromJson(const nlohmann::json& json);
 
         auto begin(){ return m_Compounds.begin(); }
-
         auto end() { return m_Compounds.end(); }
 
     private:

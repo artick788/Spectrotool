@@ -26,22 +26,20 @@ namespace Spectrotool {
                     }
                 }
                 if (ImGui::MenuItem("Save", "Ctrl+S")) {
-                    if (m_Store->getProject() != nullptr) {
+                    if (m_Store->getDataTable() != nullptr) {
                         auto savePath = m_Window->saveFileDialog("Untitled", "Spectrotool Project (*.stproj)\0*.stproj\0");
                         savePath += ".stproj";
                         if (!savePath.empty()) {
-                            m_Store->getProject()->exportJson(savePath);
+                            m_Store->exportJson(savePath);
                         }
                     }
                 }
                 if (ImGui::MenuItem("Export Excel", "Ctrl+E")) {
-                    if (m_Store->getProject() != nullptr) {
+                    if (m_Store->getDataTable() != nullptr) {
                         auto savePath = m_Window->saveFileDialog("Untitled", "Excel (*.xlsx)\0*.xlsx\0");
                         savePath += ".xlsx";
                         if (!savePath.empty()) {
-                            MassSpecFileExportDesc desc;
-                            desc.filePath = savePath;
-                            m_Store->getProject()->exportExcel(desc);
+                            m_Store->exportExcel(savePath);
                         }
                     }
                 }

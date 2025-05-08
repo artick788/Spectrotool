@@ -4,11 +4,11 @@
 
 namespace Spectrotool {
 
-    class FilePanel: public Panel {
+    class OverviewPanel: public Panel {
     public:
-        FilePanel(UP<SyriusWindow>& window, ResourceView<Context>& context, UP<Store>& store);
+        OverviewPanel(UP<SyriusWindow>& window, ResourceView<Context>& context, UP<Store>& store);
 
-        ~FilePanel() override = default;
+        ~OverviewPanel() override = default;
 
         void render(WindowSize &size) override;
 
@@ -22,8 +22,6 @@ namespace Spectrotool {
 
     private:
         bool m_OpenFileSelector = false;
-        ProjectDesc m_ProjectDesc;
-
     };
 
 }

@@ -23,25 +23,40 @@ namespace Spectrotool {
         ImGui::End();
     }
 
-    void Store::loadProject(const ProjectDesc& desc){
+    void Store::loadProject(const DataTableDesc& desc){
         loader([this, desc] {
-            m_Project = createUP<Project>(desc);
+            m_Table = createUP<DataTable>();
+            ParserMessages msgs = parseDataTable(desc, *m_Table);
+            for (const ParserMessage& msg: msgs) {
+                m_ErrorMsg += "[" + msg.severity + "] [" + msg.sheet + "] [" + msg.address + "]: " + msg.message + "\n";
+            }
         });
     }
 
     void Store::loadProjectStproj(const fs::path &stprojPath) {
         loader([this, stprojPath] {
-            m_Project = createUP<Project>(stprojPath);
+            m_Table = createUP<DataTable>();
+            std::ifstream file(stprojPath);
+            nlohmann::json json;
+            file >> json;
+            m_Table->fromJson(json);
         });
     }
 
+    void Store::exportJson(const fs::path& filePath) const {
+
+    }
+
+    void Store::exportExcel(const fs::path& filePath) {
+
+    }
 
     bool Store::isProjectLoading() const {
         return m_IsProjectLoading;
     }
 
-    const UP<Project>& Store::getProject() const {
-        return m_Project;
+    const UP<DataTable>& Store::getDataTable() const {
+        return m_Table;
     }
 
 }

@@ -23,7 +23,7 @@ namespace Spectrotool {
 
     void DataTable::addCompound(Compound &&compound) {
         if (hasCompound(compound.getName())) {
-            SR_LOG_WARNING("DataTable", "Duplicate compound name {}");
+            SR_LOG_WARNING("DataTable", "Duplicate compound name {}", compound.getName());
         }
         m_Compounds.push_back(compound);
     }
@@ -51,15 +51,4 @@ namespace Spectrotool {
             m_Compounds.back().fromJson(compoundJson);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -33,8 +33,12 @@ namespace Spectrotool {
         auto begin(){ return m_Compounds.begin(); }
         auto end() { return m_Compounds.end(); }
 
+        bool hasSamplesAdded() const { return m_SamplesAdded; }
+        bool hasCorrectionFactorsAdded() const { return m_CorrectionFactorsAdded; }
+
     private:
         std::vector<Compound> m_Compounds;
         bool m_SamplesAdded = false;
+        bool m_CorrectionFactorsAdded = false;
     };
 }

@@ -9,8 +9,8 @@ namespace Spectrotool {
 
     void OverviewPanel::render(WindowSize &size) {
         renderPanelContent(size);
-        if (m_OpenFileSelector) {
-            renderFileSelector();
+        if (m_OpenDataFileSelector) {
+            renderDataTableFileSelector();
         }
     }
 
@@ -26,14 +26,14 @@ namespace Spectrotool {
         else {
             ImGui::Text("Upload new readings"); ImGui::SameLine();
             if (ImGui::Button("Open", {50.0f, 20.0f})) {
-                m_OpenFileSelector = true;
+                m_OpenDataFileSelector = true;
             }
         }
 
         ImGui::End();
     }
 
-    void OverviewPanel::renderFileSelector() {
+    void OverviewPanel::renderDataTableFileSelector() {
         static float windowWidth = 500.0f;
         static float windowHeight = 300.0f;
         ImGui::SetNextWindowSize({windowWidth, windowHeight});
@@ -82,13 +82,13 @@ namespace Spectrotool {
                 desc.filePath = massSpecFile;
                 desc.excludeCompoundFilter = filters;
                 m_Store->loadProject(desc);
-                m_OpenFileSelector = false;
+                m_OpenDataFileSelector = false;
                 reset();
             }
             ImGui::SameLine();
         }
         if (ImGui::Button("Close", {96.0f, 20.0f})) {
-            m_OpenFileSelector = false;
+            m_OpenDataFileSelector = false;
             reset();
         }
         const auto sizes = ImGui::GetWindowSize();
@@ -104,9 +104,19 @@ namespace Spectrotool {
         }
         ImGui::Text("%d Compounds", m_Store->getDataTable()->getCompounds().size());
         ImGui::Text("%d Samples", m_Store->getDataTable()->getSampleCount());
+
+        ImGui::NewLine();
+        ImGui::Separator();
+        ImGui::NewLine();
+        static std::string sampleListFile;
+        if (ImGui::Button("Load Sample Info", {150.0f, 20.0f})) {
+            sampleListFile = m_Window->openFileDialog(".xlsx");
+            if (fs::exists(sampleListFile)) {
+                SampleListDesc desc;
+                desc.filePath = sampleListFile;
+                m_Store->addSampleList(desc);
+            }
+        }
     }
-
-
-
 
 }

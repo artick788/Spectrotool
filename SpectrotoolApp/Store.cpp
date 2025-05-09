@@ -26,10 +26,8 @@ namespace Spectrotool {
     void Store::loadProject(const DataTableDesc& desc){
         loader([this, desc] {
             m_Table = createUP<DataTable>();
-            ParserMessages msgs = parseDataTable(desc, *m_Table);
-            for (const ParserMessage& msg: msgs) {
-                m_ErrorMsg += "[" + msg.severity + "] [" + msg.sheet + "] [" + msg.address + "]: " + msg.message + "\n";
-            }
+            const ParserMessages msgs = parseDataTable(desc, *m_Table);
+            logParserMessages(msgs);
         });
     }
 
@@ -51,6 +49,15 @@ namespace Spectrotool {
 
     }
 
+    void Store::addSampleList(const SampleListDesc &desc) {
+        loader([this, desc] {
+            SampleList list;
+            const ParserMessages msgs = parseSampleList(desc, list);
+            logParserMessages(msgs);
+            m_Table->setSampleList(list);
+        });
+    }
+
     bool Store::isProjectLoading() const {
         return m_IsProjectLoading;
     }
@@ -58,5 +65,12 @@ namespace Spectrotool {
     const UP<DataTable>& Store::getDataTable() const {
         return m_Table;
     }
+
+    void Store::logParserMessages(const ParserMessages &msgs) {
+        for (const auto&[severity, message, address, sheet]: msgs) {
+            m_ErrorMsg += "[" + severity + "] [" + sheet + "] [" + address + "]: " + message + "\n";
+        }
+    }
+
 
 }

@@ -16,7 +16,7 @@ namespace Spectrotool{
 
             void renderTable(const UP<DataTable>& project);
 
-            static void renderCompound(const Compound& compound);
+            void renderCompound(const Compound& compound);
 
         };
 

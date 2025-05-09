@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SyriusCore/SyriusCore.hpp>
-#include <Spectrotool/DataTable.hpp>
 #include <Spectrotool/Parsers/DataTableParser.hpp>
+#include <Spectrotool/Parsers/SampleListParser.hpp>
 #include <functional>
 
 namespace Spectrotool {

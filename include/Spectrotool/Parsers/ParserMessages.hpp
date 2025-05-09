@@ -20,8 +20,9 @@ namespace Spectrotool {
         const std::vector<ParserMessage>& getMessages() const { return m_Messages; }
 
         auto begin() { return m_Messages.begin(); }
-
+        auto begin() const { return m_Messages.begin(); }
         auto end() { return m_Messages.end(); }
+        auto end() const { return m_Messages.end(); }
 
         void addInfo(const std::string& message, const std::string &address = "", const std::string& sheetName = "") {
             ParserMessage msg;

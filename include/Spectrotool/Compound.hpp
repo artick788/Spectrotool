@@ -37,6 +37,8 @@ namespace Spectrotool {
 
     class Compound {
     public:
+        Compound() = default;
+
         explicit Compound(std::string name);
 
         ~Compound() = default;

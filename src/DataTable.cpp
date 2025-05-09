@@ -39,20 +39,26 @@ namespace Spectrotool {
 
     nlohmann::json DataTable::toJson() const {
         nlohmann::json json;
+        json["samplesAdded"] = m_SamplesAdded;
+        json["correctionFactorsAdded"] = m_CorrectionFactorsAdded;
+        json["compounds"] = nlohmann::json::array();
         for (const auto& compound: m_Compounds) {
-            json[compound.getName()] = compound.toJson();
+            json["compounds"].push_back(compound.toJson());
         }
         return json;
     }
 
     void DataTable::fromJson(const nlohmann::json &json) {
-        for (const auto& [name, compoundJson]: json.items()) {
-            m_Compounds.emplace_back(name);
+        m_SamplesAdded = json.at("samplesAdded");
+        m_CorrectionFactorsAdded = json.at("correctionFactorsAdded");
+        for (const auto& compoundJson: json.at("compounds")) {
+            m_Compounds.emplace_back();
             m_Compounds.back().fromJson(compoundJson);
         }
     }
 
     void DataTable::setSampleList(const SampleList &list) {
+        m_SamplesAdded = true;
         for (Compound& compound: m_Compounds) {
             compound.setSampleInfo(list);
         }

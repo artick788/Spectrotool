@@ -23,6 +23,8 @@ namespace Spectrotool {
 
         void exportExcel(const fs::path& filePath);
 
+        void addSampleList(const SampleListDesc& desc);
+
         bool isProjectLoading() const;
 
         const UP<DataTable>& getDataTable() const;
@@ -42,6 +44,8 @@ namespace Spectrotool {
                 m_IsProjectLoading = false;
             });
         }
+
+        void logParserMessages(const ParserMessages& msgs);
 
     private:
         UP<DataTable> m_Table = nullptr;

@@ -39,7 +39,6 @@ namespace Spectrotool{
         if (ImGui::BeginTabBar("CompoundList")){
             for (const auto & compound : compounds){
                 if (ImGui::BeginTabItem(compound.getName().c_str())){
-                    ImGui::Text("Name: %s", compound.getName().c_str());
                     const auto& values = compound.getValues();
                     if (values.empty()){
                         ImGui::Text("No values found for compound");
@@ -57,7 +56,18 @@ namespace Spectrotool{
     }
 
     void DataTablePanel::renderCompound(const Compound &compound) {
-        ImGui::Columns(12, "CompoundColumns");
+        ImGui::Text("Name: %s", compound.getName().c_str());
+        ImGui::NewLine();
+
+        std::size_t columnCount = 6;
+        if (m_Store->getDataTable()->hasSamplesAdded()) {
+            columnCount += 2;
+        }
+        if (m_Store->getDataTable()->hasCorrectionFactorsAdded()) {
+            columnCount += 4;
+        }
+
+        ImGui::Columns(columnCount, "CompoundColumns");
         ImGui::Separator();
         // First the header
         ImGui::Text("Name"); ImGui::NextColumn();
@@ -67,13 +77,16 @@ namespace Spectrotool{
         ImGui::Text("IS Area"); ImGui::NextColumn();
         ImGui::Text("S/N"); ImGui::NextColumn();
 
-        ImGui::Text("Weight"); ImGui::NextColumn();
-        ImGui::Text("Matrix"); ImGui::NextColumn();
-
-        ImGui::Text("Corrected IS Area"); ImGui::NextColumn();
-        ImGui::Text("Uncorrected Concentration (pg/g)"); ImGui::NextColumn();
-        ImGui::Text("Uncorrected Concentration (ug/kg)"); ImGui::NextColumn();
-        ImGui::Text("Corrected Concentration (ug/kg)"); ImGui::NextColumn();
+        if (m_Store->getDataTable()->hasSamplesAdded()) {
+            ImGui::Text("Weight"); ImGui::NextColumn();
+            ImGui::Text("Matrix"); ImGui::NextColumn();
+        }
+        if (m_Store->getDataTable()->hasCorrectionFactorsAdded()) {
+            ImGui::Text("Corrected IS Area"); ImGui::NextColumn();
+            ImGui::Text("Uncorrected Concentration (pg/g)"); ImGui::NextColumn();
+            ImGui::Text("Uncorrected Concentration (ug/kg)"); ImGui::NextColumn();
+            ImGui::Text("Corrected Concentration (ug/kg)"); ImGui::NextColumn();
+        }
 
         ImGui::Separator();
 
@@ -85,13 +98,16 @@ namespace Spectrotool{
             ImGui::Text("%f", value.isArea); ImGui::NextColumn();
             ImGui::Text("%f", value.sDivN); ImGui::NextColumn();
 
-            ImGui::Text("%f", value.weight); ImGui::NextColumn();
-            ImGui::Text("%s", value.matrix.c_str()); ImGui::NextColumn();
-
-            ImGui::Text("%f", value.correctedISArea); ImGui::NextColumn();
-            ImGui::Text("%f", value.uncorrectedConcentration_pgg); ImGui::NextColumn();
-            ImGui::Text("%f", value.uncorrectedConcentration_microgkg); ImGui::NextColumn();
-            ImGui::Text("%f", value.correctedConcentration); ImGui::NextColumn();
+            if (m_Store->getDataTable()->hasSamplesAdded()) {
+                ImGui::Text("%f", value.weight); ImGui::NextColumn();
+                ImGui::Text("%s", value.matrix.c_str()); ImGui::NextColumn();
+            }
+            if (m_Store->getDataTable()->hasCorrectionFactorsAdded()) {
+                ImGui::Text("%f", value.correctedISArea); ImGui::NextColumn();
+                ImGui::Text("%f", value.uncorrectedConcentration_pgg); ImGui::NextColumn();
+                ImGui::Text("%f", value.uncorrectedConcentration_microgkg); ImGui::NextColumn();
+                ImGui::Text("%f", value.correctedConcentration); ImGui::NextColumn();
+            }
         }
         ImGui::Columns(1);
     }

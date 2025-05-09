@@ -41,12 +41,19 @@ namespace Spectrotool {
         });
     }
 
-    void Store::exportJson(const fs::path& filePath) const {
-
+    void Store::exportJson(const fs::path& filePath) {
+        loader([this, filePath] {
+            nlohmann::json json = m_Table->toJson();
+            std::ofstream file(filePath);
+            file << json.dump(2);
+            file.close();
+        });
     }
 
     void Store::exportExcel(const fs::path& filePath) {
-
+        loader([this, filePath] {
+            exportDataTable(*m_Table, filePath);
+        });
     }
 
     void Store::addSampleList(const SampleListDesc &desc) {

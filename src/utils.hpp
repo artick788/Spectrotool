@@ -38,7 +38,7 @@ namespace Spectrotool {
     }
 
     inline void setXLValue(OpenXLSX::XLWorksheet& sheet, const std::string& cellRef, double dVal) {
-        if (dVal == NAN) {
+        if (std::isnan(dVal)) {
             return; // leave cell empty
         }
         sheet.cell(cellRef).value() = dVal;

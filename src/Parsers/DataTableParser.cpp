@@ -102,7 +102,7 @@ namespace Spectrotool {
         return msgs;
     }
 
-    void formatHeader(const OpenXLSX::XLWorksheet &sheet){
+    void formatHeader(const OpenXLSX::XLWorksheet &sheet, const bool hasSampleList, const bool hasCorrectionFactors){
         sheet.cell("A1").value() = "Name";
         sheet.cell("B1").value() = "ID";
         sheet.cell("C1").value() = "RT";
@@ -110,16 +110,20 @@ namespace Spectrotool {
         sheet.cell("E1").value() = "IS Area";
         sheet.cell("F1").value() = "S/N";
 
-        sheet.cell("G1").value() = "Weight";
-        sheet.cell("H1").value() = "Matrix";
+        if (hasSampleList) {
+            sheet.cell("G1").value() = "Weight";
+            sheet.cell("H1").value() = "Matrix";
+        }
 
-        sheet.cell("I1").value() = "CorrectedISArea";
-        sheet.cell("J1").value() = "uncorrectedConcentration (pg/g)";
-        sheet.cell("K1").value() = "uncorrectedConcentration (ug/kg)";
-        sheet.cell("L1").value() = "correctedConcentration";
+        if (hasCorrectionFactors) {
+            sheet.cell("I1").value() = "CorrectedISArea";
+            sheet.cell("J1").value() = "uncorrectedConcentration (pg/g)";
+            sheet.cell("K1").value() = "uncorrectedConcentration (ug/kg)";
+            sheet.cell("L1").value() = "correctedConcentration";
+        }
     }
 
-    void exportCompound(const Compound& compound, OpenXLSX::XLWorksheet &sheet) {
+    void exportCompound(const Compound& compound, OpenXLSX::XLWorksheet &sheet, const bool hasSampleList, const bool hasCorrectionFactors) {
         std::size_t row = 2;
         for (const auto& compoundValue: compound.getValues()) {
             setXLValue(sheet, "A" + std::to_string(row), compoundValue.name);
@@ -129,13 +133,17 @@ namespace Spectrotool {
             setXLValue(sheet, "E" + std::to_string(row), compoundValue.isArea);
             setXLValue(sheet, "F" + std::to_string(row), compoundValue.sDivN);
 
-            setXLValue(sheet, "G" + std::to_string(row), compoundValue.weight);
-            setXLValue(sheet, "H" + std::to_string(row), compoundValue.matrix);
+            if (hasSampleList) {
+                setXLValue(sheet, "G" + std::to_string(row), compoundValue.weight);
+                setXLValue(sheet, "H" + std::to_string(row), compoundValue.matrix);
+            }
 
-            setXLValue(sheet, "I" + std::to_string(row), compoundValue.correctedISArea);
-            setXLValue(sheet, "J" + std::to_string(row), compoundValue.uncorrectedConcentration_pgg);
-            setXLValue(sheet, "K" + std::to_string(row), compoundValue.uncorrectedConcentration_microgkg);
-            setXLValue(sheet, "L" + std::to_string(row), compoundValue.correctedConcentration);
+            if (hasCorrectionFactors) {
+                setXLValue(sheet, "I" + std::to_string(row), compoundValue.correctedISArea);
+                setXLValue(sheet, "J" + std::to_string(row), compoundValue.uncorrectedConcentration_pgg);
+                setXLValue(sheet, "K" + std::to_string(row), compoundValue.uncorrectedConcentration_microgkg);
+                setXLValue(sheet, "L" + std::to_string(row), compoundValue.correctedConcentration);
+            }
             row++;
         }
     }
@@ -160,11 +168,12 @@ namespace Spectrotool {
             OpenXLSX::XLWorksheet sheet = wb.worksheet(sheetName);
 
             // Add header
-            formatHeader(sheet);
+            formatHeader(sheet, table.hasSamplesAdded(), table.hasCorrectionFactorsAdded());
             // Add values
-            exportCompound(compound, sheet);
+            exportCompound(compound, sheet, table.hasSamplesAdded(), table.hasCorrectionFactorsAdded());
         }
-
+        doc.workbook().deleteSheet("Sheet1"); // Remove the default sheet
+        doc.save();
     }
 
 }

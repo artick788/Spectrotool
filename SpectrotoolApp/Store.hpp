@@ -19,7 +19,7 @@ namespace Spectrotool {
 
         void loadProjectStproj(const fs::path& stprojPath);
 
-        void exportJson(const fs::path& filePath) const;
+        void exportJson(const fs::path& filePath);
 
         void exportExcel(const fs::path& filePath);
 

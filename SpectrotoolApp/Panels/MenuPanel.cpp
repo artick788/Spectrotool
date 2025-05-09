@@ -28,6 +28,9 @@ namespace Spectrotool {
                 if (ImGui::MenuItem("Save", "Ctrl+S")) {
                     if (m_Store->getDataTable() != nullptr) {
                         auto savePath = m_Window->saveFileDialog("Untitled", "Spectrotool Project (*.stproj)\0*.stproj\0");
+                        if (savePath.find(".stproj") == std::string::npos) {
+                            savePath += ".stproj";
+                        }
                         savePath += ".stproj";
                         if (!savePath.empty()) {
                             m_Store->exportJson(savePath);
@@ -37,7 +40,9 @@ namespace Spectrotool {
                 if (ImGui::MenuItem("Export Excel", "Ctrl+E")) {
                     if (m_Store->getDataTable() != nullptr) {
                         auto savePath = m_Window->saveFileDialog("Untitled", "Excel (*.xlsx)\0*.xlsx\0");
-                        savePath += ".xlsx";
+                        if (savePath.find(".xlsx") == std::string::npos) {
+                            savePath += ".xlsx";
+                        }
                         if (!savePath.empty()) {
                             m_Store->exportExcel(savePath);
                         }

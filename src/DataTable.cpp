@@ -51,4 +51,11 @@ namespace Spectrotool {
             m_Compounds.back().fromJson(compoundJson);
         }
     }
+
+    void DataTable::setSampleList(const SampleList &list) {
+        for (Compound& compound: m_Compounds) {
+            compound.setSampleInfo(list);
+        }
+    }
+
 }

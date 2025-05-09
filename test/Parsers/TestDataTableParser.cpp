@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../include/Spectrotool/Parsers/DataTableParser.hpp"
+#include "../../include/Spectrotool/Parsers/DataTableParser.hpp"
 
 using namespace Spectrotool;
 

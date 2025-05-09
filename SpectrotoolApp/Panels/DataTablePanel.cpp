@@ -14,13 +14,21 @@ namespace Spectrotool{
                                            ImGuiWindowFlags_NoResize);
 
         if (m_Store->isProjectLoading()) {
+            ImGui::BeginDisabled(); // Disable interaction
+            ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f); // Fade out
             ImGui::Text("Loading project...");
         }
+
         else if (m_Store->getDataTable() != nullptr){
             renderTable(m_Store->getDataTable());
         }
         else {
             ImGui::TextColored({1.0f, 0.0f, 0.0f, 1.0f}, "No project loaded! Please load some readings or open an existing project.");
+        }
+
+        if (m_Store->isProjectLoading()) {
+            ImGui::PopStyleVar();
+            ImGui::EndDisabled();
         }
 
         ImGui::End();

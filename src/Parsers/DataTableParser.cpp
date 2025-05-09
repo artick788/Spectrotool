@@ -19,7 +19,7 @@ namespace Spectrotool {
 
     std::string validCompound(const std::string& potentialMatch, ParserMessages& msgs, const DataTableDesc& desc) {
         // check if it is a compound entry and not a random string
-        std::regex pattern(R"(^Compound\s+\d+:\s+(.+)$)");
+        const std::regex pattern(R"(^Compound\s+\d+:\s+(.+)$)");
         std::smatch match;
         if (!std::regex_match(potentialMatch, match, pattern)) {
             return ""; // empty string

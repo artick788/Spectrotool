@@ -13,24 +13,24 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 set(SPECTROTOOL_HEADERS
     include/Spectrotool/Compound.hpp
     include/Spectrotool/Defs.hpp
-    include/Spectrotool/MassSpecFile.hpp
-    include/Spectrotool/SampleListFile.hpp
+        include/Spectrotool/SampleList.hpp
     include/Spectrotool/CorrectionFactor.hpp
         include/Spectrotool/DataTable.hpp
         include/Spectrotool/Parsers/DataTableParser.hpp
         include/Spectrotool/Parsers/ParserMessages.hpp
+        include/Spectrotool/Parsers/SampleListParser.hpp
 )
 
 set(SPECTROTOOL_SRC
     include/Spectrotool/json.hpp
     src/Compound.cpp
-    src/MassSpecFile.cpp
-    src/SampleListFile.cpp
+        src/SampleList.cpp
     src/CorrectionFactor.cpp
     src/utils.cpp
     src/utils.hpp
         src/DataTable.cpp
         src/Parsers/DataTableParser.cpp
+        src/Parsers/SampleListParser.cpp
 )
 
 add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})
@@ -65,13 +65,10 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")
 
     add_executable(SpectrotoolTest ${SPECTROTOOL_SRC}
-            test/TestMassSpecFile.cpp
-            test/TestMassSpecFile.hpp
-            test/TestSampleListFile.cpp
-            test/TestSampleListFile.hpp
-            test/TestCorrectionFactor.cpp
             test/TestDataTable.cpp
-            test/TestDataTableParser.cpp)
+            test/Parsers/TestDataTableParser.cpp
+            test/Parsers/TestSampleListParser.cpp
+            test/TestSampleList.cpp)
     add_dependencies(SpectrotoolTest gtest)
 
     target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX SyriusUtils)

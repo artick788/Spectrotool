@@ -5,7 +5,7 @@
 #include <unordered_set>
 
 #include "CorrectionFactor.hpp"
-#include "SampleListFile.hpp"
+#include "SampleList.hpp"
 #include "json.hpp"
 
 namespace Spectrotool {
@@ -47,9 +47,18 @@ namespace Spectrotool {
 
         [[nodiscard]] const std::vector<CompoundValue>& getValues() const { return m_Values; }
 
+        const CompoundValue& operator[](const std::string& name) const {
+            for (const auto& v : m_Values) {
+                if (v.name == name) {
+                    return v;
+                }
+            }
+            throw std::runtime_error("Cannot find compoundValue: " + name);
+        }
+
         std::string str() const;
 
-        void setSampleInfo(const SampleListFile& sampleListFile);
+        void setSampleInfo(const SampleList& list);
 
         void correct(const CorrectionValue& correctionValue);
 

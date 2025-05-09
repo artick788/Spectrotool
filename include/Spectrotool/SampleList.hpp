@@ -6,31 +6,25 @@
 
 namespace Spectrotool {
 
-    struct SampleListFileDesc {
-        fs::path filePath;
-    };
-
     struct SampleInfo {
         std::string id;
         double weight; // in grams
         std::string matrix; // e.g. soil, water, etc.
     };
 
-    class SampleListFile {
+    class SampleList {
     public:
-        explicit SampleListFile(const SampleListFileDesc& desc);
+        SampleList() = default;
 
-        ~SampleListFile() = default;
+        ~SampleList() = default;
 
         const std::unordered_map<std::string, SampleInfo>& getSamples() const { return m_Samples; }
+
+        SampleInfo& operator[](const std::string& id) { return m_Samples[id]; }
 
         const SampleInfo& operator[](const std::string& id) const { return m_Samples.at(id); }
 
         bool hasSample(const std::string& id) const { return m_Samples.find(id) != m_Samples.end(); }
-
-    private:
-
-        void loadSheet(const OpenXLSX::XLWorksheet& sheet);
 
     private:
 

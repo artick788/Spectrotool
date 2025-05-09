@@ -2,6 +2,7 @@
 
 #include "Defs.hpp"
 #include "Compound.hpp"
+#include "SampleList.hpp"
 
 namespace Spectrotool {
 
@@ -27,10 +28,13 @@ namespace Spectrotool {
 
         void fromJson(const nlohmann::json& json);
 
+        void setSampleList(const SampleList& list);
+
         auto begin(){ return m_Compounds.begin(); }
         auto end() { return m_Compounds.end(); }
 
     private:
         std::vector<Compound> m_Compounds;
+        bool m_SamplesAdded = false;
     };
 }

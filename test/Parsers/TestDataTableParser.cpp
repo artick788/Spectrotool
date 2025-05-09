@@ -42,30 +42,33 @@ TEST_F(TestDataTableParser, HappyDayParse) {
     EXPECT_TRUE(table.hasCompound("m-PFPeA"));
 }
 
-TEST_F(TestDataTableParser, HappyDaySmallParseWithFilter) {
+TEST_F(TestDataTableParser, Filter) {
+    // Without filter
     DataTableDesc desc;
-    desc.filePath = fs::current_path() / "TestResources" / "HappyDaySmall" / "220115_PFASFORWARD_VMM.xlsx";
+    desc.filePath = fs::current_path() / "TestResources" / "Filter" / "Filter.xlsx";
 
-    DataTable table;
-    ParserMessages msgs = parseDataTable(desc, table);
+    DataTable unfiltered;
+    ParserMessages msgs = parseDataTable(desc, unfiltered);
     printMessages(msgs);
 
-    // Sanity check
-    auto compounds = table.getCompounds();
-    ASSERT_EQ(table.getCompounds().size(), 2);
-    auto mePFBSA = compounds[0];
-    EXPECT_EQ(mePFBSA.getValues().size(), 89);
-    auto pfbs1 = compounds[1];
-    EXPECT_EQ(pfbs1.getValues().size(), 89);
+    const auto& compounds = unfiltered.getCompounds();
+    ASSERT_EQ(compounds.size(), 2);
+    EXPECT_EQ(compounds[0].getName(), "PFBSA");
+    EXPECT_EQ(compounds[0].getValues().size(), 5);
+    EXPECT_EQ(compounds[1].getName(), "m-PFBSA");
+    EXPECT_EQ(compounds[1].getValues().size(), 5);
 
-    // Now read again with filter
-    desc.excludeCompoundFilter = {"Me"};
-    DataTable table2;
-    msgs = parseDataTable(desc, table2);
-    compounds = table2.getCompounds();
-    ASSERT_EQ(table2.getCompounds().size(), 1);
-    auto pfbs2 = compounds[0];
-    EXPECT_EQ(pfbs2.getValues().size(), 89); // ensure that subsequent compounds are not added to the previous compound
+    // with filter
+    desc.excludeCompoundFilter = {"m-"};
+    DataTable filtered;
+    msgs = parseDataTable(desc, filtered);
+    printMessages(msgs);
+
+    const auto& compounds1 = filtered.getCompounds();
+    ASSERT_EQ(compounds1.size(), 1);
+    EXPECT_EQ(compounds1[0].getName(), "PFBSA");
+    EXPECT_EQ(compounds1[0].getValues().size(), 5); // Following values not added to previous compound
+
 }
 
 TEST_F(TestDataTableParser, ReplacementRules) {

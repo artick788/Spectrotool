@@ -40,7 +40,12 @@ namespace Spectrotool {
         ImGui::Begin("Load new data", nullptr, ImGuiWindowFlags_NoCollapse);
 
         static std::string massSpecFile;
-        static std::vector<std::string> filters;
+        /*
+         * Brakste filter code ever
+         * rawe arrays for strings letsgooo
+         */
+        constexpr size_t maxLength = 256;
+        static std::vector<std::array<char, maxLength>> filters;
         static std::size_t filterCount = 1;
         auto reset = [&]() {
             massSpecFile.clear();
@@ -56,23 +61,16 @@ namespace Spectrotool {
         ImGui::Separator();
         ImGui::Text("Exclude compounds whose name contains one of these filters: ");
         for (size_t i = 0; i < filters.size(); ++i) {
-            constexpr size_t maxLength = 256;
             ImGui::PushID(static_cast<int>(i));
-            // Ensure enough space in the string to avoid buffer overflow
-            if (filters[i].capacity() < maxLength)
-                filters[i].reserve(maxLength); // Optional: ensure capacity
-            if (filters[i].size() < maxLength)
-                filters[i].resize(maxLength, '\0'); // Expand to fixed size temporarily
-            if (ImGui::InputText("##item", filters[i].data(), maxLength)) {
-                // Remove trailing nulls after edit
-                filters[i] = std::string(filters[i].c_str());
-            }
+            ImGui::InputText("##item", filters[i].data(), filters[i].size());
 
             ImGui::PopID();
         }
 
         if (ImGui::Button("Add Compound Filter")) {
-            filters.emplace_back(std::string("filter") + std::to_string(filterCount++)); // Add new string
+            std::array<char, 256> newFilter{};
+            std::snprintf(newFilter.data(), newFilter.size(), "filter%zu", filterCount++);
+            filters.push_back(newFilter);
         }
 
         ImGui::NewLine();
@@ -80,7 +78,11 @@ namespace Spectrotool {
             if (ImGui::Button("Load", {96.0f, 20.0f})) {
                 DataTableDesc desc;
                 desc.filePath = massSpecFile;
-                desc.excludeCompoundFilter = filters;
+                for (const auto& filter: filters) {
+                    std::string f(filter.data(), strnlen(filter.data(), 256));
+                    desc.excludeCompoundFilter.push_back(f);
+
+                }
                 m_Store->loadProject(desc);
                 m_OpenDataFileSelector = false;
                 reset();

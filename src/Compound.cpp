@@ -117,7 +117,7 @@ namespace Spectrotool {
             const double area = value.area / value.correctedISArea;
             const double weight = (correctionValue.quantityISTD * 1000) / value.weight;
             value.uncorrectedConcentration_pgg = area * weight;
-            value.uncorrectedConcentration_microgkg = value.uncorrectedConcentration_pgg * 1000;
+            value.uncorrectedConcentration_microgkg = value.uncorrectedConcentration_pgg / 1000;
         }
 
         // 2. Blank Calculation

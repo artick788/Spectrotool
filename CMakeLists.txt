@@ -19,6 +19,7 @@ set(SPECTROTOOL_HEADERS
         include/Spectrotool/Parsers/DataTableParser.hpp
         include/Spectrotool/Parsers/ParserMessages.hpp
         include/Spectrotool/Parsers/SampleListParser.hpp
+        include/Spectrotool/Parsers/CorrectionFactorParser.hpp
 )
 
 set(SPECTROTOOL_SRC
@@ -31,6 +32,7 @@ set(SPECTROTOOL_SRC
         src/DataTable.cpp
         src/Parsers/DataTableParser.cpp
         src/Parsers/SampleListParser.cpp
+        src/Parsers/CorrectionFactorParser.cpp
 )
 
 add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})
@@ -68,7 +70,8 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
             test/TestDataTable.cpp
             test/Parsers/TestDataTableParser.cpp
             test/Parsers/TestSampleListParser.cpp
-            test/TestSampleList.cpp)
+            test/TestSampleList.cpp
+            test/Parsers/TestCorrectionFactorParser.cpp)
     add_dependencies(SpectrotoolTest gtest)
 
     target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX SyriusUtils)

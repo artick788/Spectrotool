@@ -69,8 +69,11 @@ namespace Spectrotool {
         void fromJson(const nlohmann::json& json);
 
         auto begin(){ return m_Values.begin(); }
-
+        auto begin() const{ return m_Values.begin(); }
         auto end() { return m_Values.end(); }
+        auto end() const { return m_Values.end(); }
+
+        double getBlankCorrection() const { return m_BlankCorrection; }
 
     private:
 

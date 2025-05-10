@@ -116,7 +116,17 @@ namespace Spectrotool {
             if (fs::exists(sampleListFile)) {
                 SampleListDesc desc;
                 desc.filePath = sampleListFile;
-                m_Store->addSampleList(desc);
+                m_Store->setSampleList(desc);
+            }
+        }
+
+        static std::string correctionFactorFile;
+        if (ImGui::Button("Load Correction Factors", {150.0f, 20.0f})) {
+            correctionFactorFile = m_Window->openFileDialog(".xlsx");
+            if (fs::exists(correctionFactorFile)) {
+                CorrectionFactorDesc desc;
+                desc.filePath = correctionFactorFile;
+                m_Store->setCorrectionFactor(desc);
             }
         }
     }

@@ -3,7 +3,7 @@
 #include <XLCell.hpp>
 #include <XLSheet.hpp>
 
-#include "Spectrotool/json.hpp"
+#include "../include/Spectrotool/json.hpp"
 
 
 namespace OpenXLSX {

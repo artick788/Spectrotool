@@ -23,7 +23,9 @@ namespace Spectrotool {
 
         void exportExcel(const fs::path& filePath);
 
-        void addSampleList(const SampleListDesc& desc);
+        void setSampleList(const SampleListDesc& desc);
+
+        void setCorrectionFactor(const CorrectionFactorDesc& desc);
 
         bool isProjectLoading() const;
 

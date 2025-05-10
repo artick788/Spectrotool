@@ -15,17 +15,15 @@ namespace Spectrotool {
         double quantityISTD = 0.0;
     };
 
-    struct CorrectionFactorDesc {
-        fs::path filePath;
-    };
-
     class CorrectionFactor{
     public:
-        explicit CorrectionFactor(const CorrectionFactorDesc& desc);
+        CorrectionFactor() = default;
 
         ~CorrectionFactor() = default;
 
         const std::unordered_map<std::string, CorrectionValue>& getCorrectionValues() const { return m_CorrectionValues;}
+
+        void addValue(CorrectionValue&& value);
 
         const CorrectionValue& getCorrectionValue(const std::string& name) const;
 

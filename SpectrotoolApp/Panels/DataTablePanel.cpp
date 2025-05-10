@@ -57,6 +57,9 @@ namespace Spectrotool{
 
     void DataTablePanel::renderCompound(const Compound &compound) {
         ImGui::Text("Name: %s", compound.getName().c_str());
+        if (m_Store->getDataTable()->hasCorrectionFactorsAdded()) {
+            ImGui::Text("Blank Correction: %f", compound.getBlankCorrection());
+        }
         ImGui::NewLine();
 
         std::size_t columnCount = 6;

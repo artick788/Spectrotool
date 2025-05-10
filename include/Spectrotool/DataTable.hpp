@@ -3,6 +3,7 @@
 #include "Defs.hpp"
 #include "Compound.hpp"
 #include "SampleList.hpp"
+#include "CorrectionFactor.hpp"
 
 namespace Spectrotool {
 
@@ -29,6 +30,8 @@ namespace Spectrotool {
         void fromJson(const nlohmann::json& json);
 
         void setSampleList(const SampleList& list);
+
+        std::vector<std::string> setCorrectionFactor(const CorrectionFactor& factor);
 
         auto begin(){ return m_Compounds.begin(); }
         auto end() { return m_Compounds.end(); }

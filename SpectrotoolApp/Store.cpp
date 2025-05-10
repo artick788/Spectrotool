@@ -56,12 +56,24 @@ namespace Spectrotool {
         });
     }
 
-    void Store::addSampleList(const SampleListDesc &desc) {
+    void Store::setSampleList(const SampleListDesc &desc) {
         loader([this, desc] {
             SampleList list;
             const ParserMessages msgs = parseSampleList(desc, list);
             logParserMessages(msgs);
             m_Table->setSampleList(list);
+        });
+    }
+
+    void Store::setCorrectionFactor(const CorrectionFactorDesc& desc) {
+        loader([this, desc] {
+            CorrectionFactor factor;
+            const ParserMessages msgs = parseCorrectionFactor(desc, factor);
+            logParserMessages(msgs);
+            const std::vector<std::string> errors = m_Table->setCorrectionFactor(factor);
+            for (const auto& error: errors) {
+                m_ErrorMsg += error + "\n";
+            }
         });
     }
 

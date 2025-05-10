@@ -11,7 +11,6 @@ namespace Spectrotool {
         return samples;
     }
 
-
     bool DataTable::hasCompound(const std::string &name) const {
         for (const auto& compound : m_Compounds) {
             if (compound.getName() == name) {
@@ -63,5 +62,22 @@ namespace Spectrotool {
             compound.setSampleInfo(list);
         }
     }
+
+    std::vector<std::string> DataTable::setCorrectionFactor(const CorrectionFactor &factor) {
+        m_CorrectionFactorsAdded = true;
+        std::vector<std::string> errors;
+        for (Compound& compound : m_Compounds) {
+            if (!factor.hasCorrectionValue(compound.getName())) {
+                std::string error = "Compound: " + compound.getName() + " does not have a correction factor!";
+                errors.push_back(error);
+            }
+            else {
+                const CorrectionValue& correction = factor.getCorrectionValue(compound.getName());
+                compound.correct(correction);
+            }
+        }
+        return errors;
+    }
+
 
 }

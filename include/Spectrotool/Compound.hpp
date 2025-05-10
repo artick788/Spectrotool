@@ -13,20 +13,20 @@ namespace Spectrotool {
     struct CompoundValue {
         std::string name;
         std::string id;
-        double rt = 0.0;
-        double area = 0.0;
-        double isArea = 0.0;
-        double sDivN = 0.0;
+        double rt = NAN;
+        double area = NAN;
+        double isArea = NAN;
+        double sDivN = NAN;
 
         // data from SampleListFile
-        double weight = 0.0; // Grams
+        double weight = NAN; // Grams
         std::string matrix;
 
         // correction factors
-        double correctedISArea = 0.0;
-        double uncorrectedConcentration_pgg = 0.0; // pg/g
-        double uncorrectedConcentration_microgkg = 0.0; //µg/kg
-        double correctedConcentration = 0.0;
+        double correctedISArea = NAN;
+        double uncorrectedConcentration_pgg = NAN; // pg/g
+        double uncorrectedConcentration_microgkg = NAN; //µg/kg
+        double correctedConcentration = NAN;
 
         std::string str() const;
 

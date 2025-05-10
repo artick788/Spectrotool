@@ -1,4 +1,5 @@
 #include "../include/Spectrotool/Compound.hpp"
+#include "utils.hpp"
 
 #include <stdexcept>
 #include <utility>
@@ -11,38 +12,39 @@ namespace Spectrotool {
 
     nlohmann::json CompoundValue::toJson() const {
         nlohmann::json json;
-        json["name"] = name;
-        json["id"] = id;
-        json["rt"] = rt;
-        json["area"] = area;
-        json["isArea"] = isArea;
-        json["sDivN"] = sDivN;
+        setJsonValue(json, "name", name);
+        setJsonValue(json, "name", name);
+        setJsonValue(json, "id", id);
+        setJsonValue(json, "rt", rt);
+        setJsonValue(json, "area", area);
+        setJsonValue(json, "isArea", isArea);
+        setJsonValue(json, "sDivN", sDivN);
 
-        json["weight"] = weight;
-        json["matrix"] = matrix;
+        setJsonValue(json, "weight", weight);
+        setJsonValue(json, "matrix", matrix);
 
-        json["correctedISArea"] = correctedISArea;
-        json["uncorrectedConcentration_pgg"] = uncorrectedConcentration_pgg;
-        json["uncorrectedConcentration_microgkg"] = uncorrectedConcentration_microgkg;
-        json["correctedConcentration"] = correctedConcentration;
+        setJsonValue(json, "correctedISArea", correctedISArea);
+        setJsonValue(json, "uncorrectedConcentration_pgg", uncorrectedConcentration_pgg);
+        setJsonValue(json, "uncorrectedConcentration_microgkg", uncorrectedConcentration_microgkg);
+        setJsonValue(json, "correctedConcentration", correctedConcentration);
         return json;
     }
 
     void CompoundValue::fromJson(const nlohmann::json &json) {
-        name = json["name"].get<std::string>();
-        id = json["id"].get<std::string>();
-        rt = json["rt"].get<double>();
-        area = json["area"].get<double>();
-        isArea = json["isArea"].get<double>();
-        sDivN = json["sDivN"].get<double>();
+        name = getJsonValue<std::string>(json, "name");
+        id = getJsonValue<std::string>(json, "id");
+        rt = getJsonValue<double>(json, "rt");
+        area = getJsonValue<double>(json, "area");
+        isArea = getJsonValue<double>(json, "isArea");
+        sDivN = getJsonValue<double>(json, "sDivN");
 
-        weight = json["weight"].get<double>();
-        matrix = json["matrix"].get<std::string>();
+        weight = getJsonValue<double>(json, "weight");
+        matrix = getJsonValue<std::string>(json, "matrix");
 
-        correctedISArea = json["correctedISArea"].get<double>();
-        uncorrectedConcentration_pgg = json["uncorrectedConcentration_pgg"].get<double>();
-        uncorrectedConcentration_microgkg = json["uncorrectedConcentration_microgkg"].get<double>();
-        correctedConcentration = json["correctedConcentration"].get<double>();
+        correctedISArea = getJsonValue<double>(json, "correctedISArea");
+        uncorrectedConcentration_pgg = getJsonValue<double>(json, "uncorrectedConcentration_pgg");
+        uncorrectedConcentration_microgkg = getJsonValue<double>(json, "uncorrectedConcentration_microgkg");
+        correctedConcentration = getJsonValue<double>(json, "correctedConcentration");
     }
 
     Compound::Compound(std::string name):
@@ -84,8 +86,8 @@ namespace Spectrotool {
 
     nlohmann::json Compound::toJson() const {
         nlohmann::json json;
-        json["name"] = m_Name;
-        json["blankCorrection"] = m_BlankCorrection;
+        setJsonValue(json, "name", m_Name);
+        setJsonValue(json, "blankCorrection", m_BlankCorrection);
         nlohmann::json values;
         for (const auto& value: m_Values) {
             values.push_back(value.toJson());
@@ -95,8 +97,8 @@ namespace Spectrotool {
     }
 
     void Compound::fromJson(const nlohmann::json &json) {
-        m_Name = json["name"].get<std::string>();
-        m_BlankCorrection = json["blankCorrection"].get<double>();
+        m_Name = getJsonValue<std::string>(json, "name");
+        m_BlankCorrection = getJsonValue<double>(json, "blankCorrection");
         for (const auto& valueJson: json["values"]) {
             m_Values.emplace_back();
             m_Values.back().fromJson(valueJson);

@@ -13,26 +13,26 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 set(SPECTROTOOL_HEADERS
     include/Spectrotool/Compound.hpp
     include/Spectrotool/Defs.hpp
-        include/Spectrotool/SampleList.hpp
+    include/Spectrotool/SampleList.hpp
     include/Spectrotool/CorrectionFactor.hpp
-        include/Spectrotool/DataTable.hpp
-        include/Spectrotool/Parsers/DataTableParser.hpp
-        include/Spectrotool/Parsers/ParserMessages.hpp
-        include/Spectrotool/Parsers/SampleListParser.hpp
-        include/Spectrotool/Parsers/CorrectionFactorParser.hpp
+    include/Spectrotool/DataTable.hpp
+    include/Spectrotool/Parsers/DataTableParser.hpp
+    include/Spectrotool/Parsers/ParserMessages.hpp
+    include/Spectrotool/Parsers/SampleListParser.hpp
+    include/Spectrotool/Parsers/CorrectionFactorParser.hpp
 )
 
 set(SPECTROTOOL_SRC
     include/Spectrotool/json.hpp
     src/Compound.cpp
-        src/SampleList.cpp
+    src/SampleList.cpp
     src/CorrectionFactor.cpp
     src/utils.cpp
     src/utils.hpp
-        src/DataTable.cpp
-        src/Parsers/DataTableParser.cpp
-        src/Parsers/SampleListParser.cpp
-        src/Parsers/CorrectionFactorParser.cpp
+    src/DataTable.cpp
+    src/Parsers/DataTableParser.cpp
+    src/Parsers/SampleListParser.cpp
+    src/Parsers/CorrectionFactorParser.cpp
 )
 
 add_library(Spectrotool STATIC ${SPECTROTOOL_SRC} ${SPECTROTOOL_HEADERS})
@@ -49,12 +49,12 @@ set(SPECTROTOOL_APP_SRC
     SpectrotoolApp/Store.hpp
     SpectrotoolApp/Panels/MenuPanel.cpp
     SpectrotoolApp/Panels/MenuPanel.hpp
-        SpectrotoolApp/Panels/OverviewPanel.cpp
-        SpectrotoolApp/Panels/OverviewPanel.hpp
+    SpectrotoolApp/Panels/OverviewPanel.cpp
+    SpectrotoolApp/Panels/OverviewPanel.hpp
     SpectrotoolApp/Worker.cpp
     SpectrotoolApp/Worker.hpp
-        SpectrotoolApp/Panels/DataTablePanel.cpp
-        SpectrotoolApp/Panels/DataTablePanel.hpp)
+    SpectrotoolApp/Panels/DataTablePanel.cpp
+    SpectrotoolApp/Panels/DataTablePanel.hpp)
 
 add_executable(SpectrotoolApp main.cpp ${SPECTROTOOL_APP_SRC})
 target_link_libraries(SpectrotoolApp Spectrotool SyriusCore)
@@ -67,11 +67,11 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")
 
     add_executable(SpectrotoolTest ${SPECTROTOOL_SRC}
-            test/TestDataTable.cpp
-            test/Parsers/TestDataTableParser.cpp
-            test/Parsers/TestSampleListParser.cpp
-            test/TestSampleList.cpp
-            test/Parsers/TestCorrectionFactorParser.cpp)
+        test/TestDataTable.cpp
+        test/Parsers/TestDataTableParser.cpp
+        test/Parsers/TestSampleListParser.cpp
+        test/TestSampleList.cpp
+        test/Parsers/TestCorrectionFactorParser.cpp)
     add_dependencies(SpectrotoolTest gtest)
 
     target_link_libraries(SpectrotoolTest GTest::gtest GTest::gtest_main OpenXLSX SyriusUtils)

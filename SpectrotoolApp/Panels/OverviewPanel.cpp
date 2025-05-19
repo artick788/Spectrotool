@@ -36,74 +36,75 @@ namespace Spectrotool {
     void OverviewPanel::renderDataTableFileSelector() {
         static float windowWidth = 500.0f;
         static float windowHeight = 300.0f;
+        ImGui::OpenPopup("Load new data");
         ImGui::SetNextWindowSize({windowWidth, windowHeight});
-        ImGui::Begin("Load new data", nullptr, ImGuiWindowFlags_NoCollapse);
-
-        static std::string massSpecFile;
-        /*
-         * Brakste filter code ever
-         * rawe arrays for strings letsgooo
-         */
-        constexpr size_t maxLength = 256;
-        static std::vector<std::array<char, maxLength>> filters;
-        static std::size_t filterCount = 1;
-        auto reset = [&]() {
-            massSpecFile.clear();
-            filters.clear();
-            filterCount = 1;
-        };
-        if (ImGui::Button("Load Excel file", {200.0f, 20.0f})) {
-           massSpecFile = m_Window->openFileDialog(".xlsx");
-        }
-        ImGui::SameLine();
-        ImGui::Text("%s",   massSpecFile.c_str());
-
-        ImGui::Separator();
-        ImGui::Text("Exclude compounds whose name contains one of these filters: ");
-        int toDelete = -1;
-        for (size_t i = 0; i < filters.size(); ++i) {
-            ImGui::PushID(static_cast<int>(i));
-            ImGui::InputText("##item", filters[i].data(), filters[i].size());
-            ImGui::SameLine();
-            if (ImGui::Button("Delete")) {
-                toDelete = i;
+        if (ImGui::BeginPopupModal("Load new data")) {
+            static std::string massSpecFile;
+            /*
+             * Brakste filter code ever
+             * rawe arrays for strings letsgooo
+             */
+            constexpr size_t maxLength = 256;
+            static std::vector<std::array<char, maxLength>> filters;
+            static std::size_t filterCount = 1;
+            auto reset = [&]() {
+                massSpecFile.clear();
+                filters.clear();
+                filterCount = 1;
+            };
+            if (ImGui::Button("Load Excel file", {200.0f, 20.0f})) {
+               massSpecFile = m_Window->openFileDialog(".xlsx");
             }
-            ImGui::PopID();
-        }
-        if (toDelete != -1) {
-            filters.erase(filters.begin() + toDelete);
-        }
+            ImGui::SameLine();
+            ImGui::Text("%s",   massSpecFile.c_str());
 
-        if (ImGui::Button("Add Compound Filter")) {
-            std::array<char, 256> newFilter{};
-            std::snprintf(newFilter.data(), newFilter.size(), "filter%zu", filterCount++);
-            filters.push_back(newFilter);
-        }
-
-        ImGui::NewLine();
-        if (fs::exists(massSpecFile)) {
-            if (ImGui::Button("Load", {96.0f, 20.0f})) {
-                DataTableDesc desc;
-                desc.filePath = massSpecFile;
-                for (const auto& filter: filters) {
-                    std::string f(filter.data(), strnlen(filter.data(), 256));
-                    desc.excludeCompoundFilter.push_back(f);
-
+            ImGui::Separator();
+            ImGui::Text("Exclude compounds whose name contains one of these filters: ");
+            int toDelete = -1;
+            for (size_t i = 0; i < filters.size(); ++i) {
+                ImGui::PushID(static_cast<int>(i));
+                ImGui::InputText("##item", filters[i].data(), filters[i].size());
+                ImGui::SameLine();
+                if (ImGui::Button("Delete")) {
+                    toDelete = i;
                 }
-                m_Store->loadProject(desc);
+                ImGui::PopID();
+            }
+            if (toDelete != -1) {
+                filters.erase(filters.begin() + toDelete);
+            }
+
+            if (ImGui::Button("Add Compound Filter")) {
+                std::array<char, 256> newFilter{};
+                std::snprintf(newFilter.data(), newFilter.size(), "filter%zu", filterCount++);
+                filters.push_back(newFilter);
+            }
+
+            ImGui::NewLine();
+            if (fs::exists(massSpecFile)) {
+                if (ImGui::Button("Load", {96.0f, 20.0f})) {
+                    DataTableDesc desc;
+                    desc.filePath = massSpecFile;
+                    for (const auto& filter: filters) {
+                        std::string f(filter.data(), strnlen(filter.data(), 256));
+                        desc.excludeCompoundFilter.push_back(f);
+
+                    }
+                    m_Store->loadProject(desc);
+                    m_OpenDataFileSelector = false;
+                    reset();
+                }
+                ImGui::SameLine();
+            }
+            if (ImGui::Button("Close", {96.0f, 20.0f})) {
                 m_OpenDataFileSelector = false;
                 reset();
             }
-            ImGui::SameLine();
+            const auto sizes = ImGui::GetWindowSize();
+            windowWidth = sizes.x;
+            windowHeight = sizes.y;
+            ImGui::EndPopup();
         }
-        if (ImGui::Button("Close", {96.0f, 20.0f})) {
-            m_OpenDataFileSelector = false;
-            reset();
-        }
-        const auto sizes = ImGui::GetWindowSize();
-        windowWidth = sizes.x;
-        windowHeight = sizes.y;
-        ImGui::End();
     }
 
     void OverviewPanel::renderProjectOverview() const {

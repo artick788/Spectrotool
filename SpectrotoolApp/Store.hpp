@@ -31,6 +31,12 @@ namespace Spectrotool {
 
         const UP<DataTable>& getDataTable() const;
 
+        void clear() {
+            loader([this] {
+                m_Table.reset();
+            });
+        }
+
     private:
 
         template<typename... Args>

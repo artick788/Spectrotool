@@ -11,6 +11,20 @@ namespace Spectrotool {
         ~MenuPanel() override = default;
 
         void render(WindowSize& size) override;
+
+    private:
+        void renderOpenMenuItem() const;
+
+        void renderSaveMenuItem() const;
+
+        void renderExportExcelMenuItem() const;
+
+        void renderClearMenuItem();
+
+        void renderClearConfirmation();
+
+    private:
+        bool m_ShowClearConfirmation = false;
     };
 
 }

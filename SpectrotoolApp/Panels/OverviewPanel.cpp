@@ -60,11 +60,18 @@ namespace Spectrotool {
 
         ImGui::Separator();
         ImGui::Text("Exclude compounds whose name contains one of these filters: ");
+        int toDelete = -1;
         for (size_t i = 0; i < filters.size(); ++i) {
             ImGui::PushID(static_cast<int>(i));
             ImGui::InputText("##item", filters[i].data(), filters[i].size());
-
+            ImGui::SameLine();
+            if (ImGui::Button("Delete")) {
+                toDelete = i;
+            }
             ImGui::PopID();
+        }
+        if (toDelete != -1) {
+            filters.erase(filters.begin() + toDelete);
         }
 
         if (ImGui::Button("Add Compound Filter")) {
